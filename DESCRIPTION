@@ -1,0 +1,46 @@
+Package: PFMC_Category_3_stocks_models
+Title: Process and conduct assessments for category 3 stocks
+Version: 0.0.1
+Authors@R: c(
+  person(
+    given = c("Jason", "M."),
+    family = "Cope",
+    role = c("aut", "cre"),
+    email = "jason.cope@noaa.gov"
+  )
+)
+Description: Reproducible research and documentation of the data processing and running of stock assessment model to inform catch limits. 
+License: GPL (>= 3) + file LICENSE
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    dplyr,
+    fs,
+    ggplot2,
+    here,
+    nwfscDiag,
+    nwfscSurvey,
+    pacfintools,
+    PEPtools,
+    purrr,
+    r4ss,
+    readr,
+    tibble,
+    tidyr,
+    tidyselect,
+    utils,
+    usethis,
+    viridis
+Remotes: 
+    pfmc-assessments/nwfscSurvey,
+    pfmc-assessments/nwfscDiag,
+    pfmc-assessments/pacfintools,
+    pfmc-assessments/PEPtools,
+    r4ss/r4ss
+Depends: 
+    R (>= 4.2)
+LazyData: true
