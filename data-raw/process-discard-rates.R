@@ -12,7 +12,7 @@ data <- nwfscSurvey::pull_gemm(
       )
   )
 
-discard_rates <- data |>
+commercial_discard_rates <- data |>
   dplyr::mutate(
     species = tolower(species)
   ) |>
@@ -31,11 +31,11 @@ discard_rates <- data |>
 
 
 usethis::use_data(
-  discard_rates,
+  commercial_discard_rates,
   overwrite = TRUE
 )
 
 write_named_csvs(
-  discard_rates,
+  commercial_discard_rates,
   dir = here::here("data-tables")
 )

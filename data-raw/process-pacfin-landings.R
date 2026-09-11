@@ -18,7 +18,7 @@ load(here::here(
 ))
 landings_sanddab <- catch.pacfin
 
-landings_by_state_gear <- dplyr::bind_rows(
+commercial_landings_by_state_gear <- dplyr::bind_rows(
   landings_stripetail,
   landings_sanddab
 ) |>
@@ -48,17 +48,17 @@ landings_by_state_gear <- dplyr::bind_rows(
   )
 
 write_named_csvs(
-  landings_by_state_gear,
+  commercial_landings_by_state_gear,
   dir = "data-tables"
 )
 
-landings <- landings_by_state_gear |>
+commercial_landings <- landings_by_state_gear |>
   dplyr::summarise(
     .by = c(species, year),
     landings_mt = round(sum(landings_mt), 4)
   )
 
 usethis::use_data(
-  landings,
+  commercial_landings,
   overwrite = TRUE
 )

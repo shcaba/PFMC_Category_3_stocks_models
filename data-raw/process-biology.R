@@ -1,7 +1,12 @@
-# Pull survey data to inform biological paramters
+# Pull survey data to inform biological parameters
 bio_data <- nwfscSurvey::pull_bio(
   common_name = c("Pacific sanddab", "stripetail rockfish")
 )
+maturity_data <- nwfscSurvey::pull_biological_samples(
+  common_name = c("Pacific sanddab", "stripetail rockfish"),
+  standard_filtering = FALSE
+)
+
 bio_data <- bio_data |>
   dplyr::mutate(
     species = Common_name
