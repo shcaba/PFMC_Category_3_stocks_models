@@ -2,7 +2,7 @@
 bio_data <- nwfscSurvey::pull_bio(
   common_name = c("Pacific sanddab", "stripetail rockfish")
 )
-maturity_data <- nwfscSurvey::pull_biological_samples(
+maturity_data_raw <- nwfscSurvey::pull_biological_samples(
   common_name = c("Pacific sanddab", "stripetail rockfish"),
   standard_filtering = FALSE
 )
@@ -55,3 +55,44 @@ usethis::use_data(
   growth_estimates,
   overwrite = TRUE
 )
+
+maturity_data_table <- maturity_data_raw |>
+  dplyr::mutate(
+    species = tolower(common_name)
+  ) |>
+  dplyr::filter(!is.na(biologically_mature_indicator)) |>
+  dplyr::select(
+    species,
+    year,
+    length_cm,
+    age_years,
+    ovary_id,
+    ovary_proportion_atresia,
+    biologically_mature_certain_indicator,
+    biologically_mature_indicator
+  )
+
+write_named_csvs(
+  maturity_data_table,
+  dir = here::here("data-tables")
+)
+
+
+survey_specimens <- bio_data |>
+  dplyr::select(
+    Year,
+    Project,
+    Common_name,
+    Sex,
+    Length_cm,
+    Age,
+    Weight_kg,
+    Depth_m,
+    Latitude_dd,
+    Longitude_dd
+  ) |>
+  dplyr::rename_all(tolower) |>
+  dplyr::rename(
+    species = common_name,
+    source = project
+  )
