@@ -15,11 +15,12 @@ WA_rf_ct_recon_nopacfin <- subset(
   CompositionType != "Existing PacFIN"
 )
 
-
+#Change pounds to MT
+WA_rf_ct_recon_nopacfin$MT <- WA_rf_ct_recon_nopacfin$SpeciesPounds / 2204.62
 #
 Cat3.rf.recon.landings.wa <- WA_rf_ct_recon_nopacfin %>%
-  select(Year, SPID, SpeciesPounds) %>%
+  select(Year, SPID, MT) %>%
   filter(SPID %in% SPID_cat3_rf) %>%
   group_by(Year, SPID) %>%
-  summarize(SpeciesPounds = sum(SpeciesPounds, na.rm = TRUE)) %>%
-  pivot_wider(names_from = SPID, values_from = SpeciesPounds, values_fill = 0)
+  summarize(MT = sum(MT, na.rm = TRUE)) %>%
+  pivot_wider(names_from = SPID, values_from = MT, values_fill = 0)
