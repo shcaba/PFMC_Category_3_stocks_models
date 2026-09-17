@@ -1,7 +1,9 @@
 drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3"
 
+# Note: currently no additional mortality is applied
+
 # data source by state and years
-# CA: mrfss_catch_raw: 1980-2003, fill in 2004, rec_catch_raw: 2005+
+# CA: 2013 assessment 1964-1979, mrfss_catch_raw: 1980-2003, fill in 2004, rec_catch_raw: 2005+
 # OR: or_rec_hist_raw: 1979-1990, mrfss_catch_raw 1991-2000, rec_catch_raw: 2001+
 # WA: wa_rec_hist_raw: 1968-1986, mrfss_catch_raw 1987-1989, rec_catch_raw: 1990+
 
@@ -45,7 +47,8 @@ ca_rec_hist_raw <- read.csv(here::here(
   "Pacific Sanddab",
   "recfin",
   "california_historical_rec_catch_2013_assessment.csv"
-))
+)) |>
+  dplyr::mutate(source = "2013 assessment")
 
 # Read in bio samples in order to fill in missing weights for the catch
 rec_bio_raw <- read.csv(here::here(
@@ -98,10 +101,12 @@ rec_catch_recent <- rec_catch_mean_weight |>
       !is.na(catch_mt),
       catch_mt,
       0.001 * average_weight * TOTAL_MORTALITY_NUM
-    )
+    ),
+    source = "recfin",
+    fleet = "receational"
   ) |>
   dplyr::summarise(
-    .by = c("species", "state", "year"),
+    .by = c("source", "species", "fleet", "state", "year"),
     catch_mt = round(sum(catch_mt), 4)
   )
 
@@ -119,7 +124,9 @@ mrfss_catch <- mrfss_catch_raw |>
       is.na(catch_raw),
       ave_weight_mt * TOT_CAT,
       catch_raw
-    )
+    ),
+    source = "recfin",
+    fleet = "receational"
   ) |>
   dplyr::filter(
     !(year < 1987 & state == "washington"),
@@ -127,7 +134,7 @@ mrfss_catch <- mrfss_catch_raw |>
   ) |>
   dplyr::ungroup() |>
   dplyr::summarise(
-    .by = c("species", "state", "year"),
+    .by = c("species", "source", "fleet", "state", "year"),
     catch_mt = round(sum(catch_fill), 4)
   )
 
@@ -140,10 +147,12 @@ wa_rec_hist <- wa_rec_hist_raw |>
     year = RECFIN_YEAR,
     state = "washington",
     species = "pacific sanddab",
-    ave_weight = ave_weight
+    ave_weight = ave_weight,
+    source = "recfin-historical",
+    fleet = "receational"
   ) |>
   dplyr::summarise(
-    .by = c("species", "state", "year"),
+    .by = c("species", "source", "fleet", "state", "year"),
     catch_mt = round(sum(0.001 * ave_weight * RETAINED_NUM), 4)
   ) |>
   dplyr::arrange(year)
@@ -154,10 +163,12 @@ or_rec_hist <- or_rec_hist_raw |>
     year = YEAR,
     state = "oregon",
     species = "pacific sanddab",
-    ave_weight = ave_weight
+    ave_weight = ave_weight,
+    source = "recfin-historical",
+    fleet = "receational"
   ) |>
   dplyr::summarise(
-    .by = c("species", "state", "year", ),
+    .by = c("species", "source", "fleet", "state", "year", ),
     catch_mt = round(sum(0.001 * ave_weight * NUMBER_OF_FISH), 4)
   ) |>
   dplyr::arrange(year)
@@ -170,7 +181,7 @@ ca_ave_catch_2003 <- dplyr::bind_rows(
     dplyr::filter(state == "california", year %in% 2001:2002)
 ) |>
   dplyr::summarise(
-    .by = c("species", "state"),
+    .by = c("species", "source", "fleet", "state"),
     year = 2003,
     catch_mt = mean(catch_mt)
   )
@@ -182,7 +193,7 @@ ca_ave_catch_1990 <- dplyr::bind_rows(
     dplyr::filter(state == "california", year %in% 1988:1994)
 ) |>
   dplyr::summarise(
-    .by = c("species", "state"),
+    .by = c("species", "source", "fleet", "state"),
     year = 1990,
     catch_mt = mean(catch_mt)
   )
@@ -204,9 +215,20 @@ recreational_catch <- dplyr::bind_rows(
   ca_rec_hist_raw
 ) |>
   dplyr::summarise(
-    .by = c("species", "year"),
+    .by = c("species", "source", "fleet", "year"),
     catch_mt = sum(catch_mt)
   )
+
+#===============================================================================
+# Visual check
+#===============================================================================
+
+ggplot2::ggplot(
+  recreational_catch,
+  ggplot2::aes(x = year, y = catch_mt, fill = source)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
 
 usethis::use_data(
   recreational_catch,
