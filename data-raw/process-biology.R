@@ -78,7 +78,7 @@ write_named_csvs(
 )
 
 
-survey_specimens <- bio_data |>
+data_survey_specimens <- bio_data |>
   dplyr::select(
     Year,
     Project,
@@ -96,3 +96,8 @@ survey_specimens <- bio_data |>
     species = common_name,
     source = project
   )
+
+usethis::use_data(
+  data_survey_specimens,
+  overwrite = TRUE
+)
