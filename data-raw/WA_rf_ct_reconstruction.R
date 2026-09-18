@@ -24,3 +24,8 @@ Cat3.rf.recon.landings.wa <- WA_rf_ct_recon_nopacfin %>%
   group_by(Year, SPID) %>%
   summarize(MT = sum(MT, na.rm = TRUE)) %>%
   pivot_wider(names_from = SPID, values_from = MT, values_fill = 0)
+
+write.csv(
+  Cat3.rf.recon.landings.wa,
+  "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3/WA rockfish catch reconstruction/wa_commercial_reconstruction.csv"
+)
