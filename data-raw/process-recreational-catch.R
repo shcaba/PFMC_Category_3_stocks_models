@@ -216,7 +216,9 @@ recreational_catch <- dplyr::bind_rows(
 ) |>
   dplyr::summarise(
     .by = c("species", "source", "fleet", "year"),
-    catch_mt = sum(catch_mt)
+    discard_mt = 0,
+    landings_mt = sum(catch_mt),
+    catch_mt = sum(discard_mt + landings_mt)
   )
 
 #===============================================================================

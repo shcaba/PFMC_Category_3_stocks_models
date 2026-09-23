@@ -1,6 +1,46 @@
 processed_final_catches <- dplyr::bind_rows(
   commercial_catch,
-  recreational_catch
+  recreational_catch |>
+    dplyr::select(-source, -fleet)
+) |>
+  dplyr::summarise(
+    .by = c(species, year),
+    landings_mt = sum(landings_mt),
+    discard_mt = sum(discard_mt),
+    catch_mt = sum(catch_mt)
+  )
+
+# format for stock synthesis
+catches_ss3_formatted <- dplyr::bind_rows(
+  processed_final_catches |>
+    dplyr::select(species, year, landings_mt) |>
+    dplyr::mutate(
+      season = 1,
+      fleet = "landings-fleet",
+      catch_se = 0.01
+    ) |>
+    dplyr::rename(catch = landings_mt),
+  processed_final_catches |>
+    dplyr::select(species, year, discard_mt) |>
+    dplyr::mutate(
+      season = 1,
+      fleet = "discard-fleet",
+      catch_se = 0.01
+    ) |>
+    dplyr::rename(catch = discard_mt)
+) |>
+  dplyr::relocate(catch, .before = catch_se) |>
+  dplyr::arrange(species)
+
+
+usethis::use_data(
+  processed_final_catches,
+  overwrite = TRUE
+)
+
+write_named_csvs(
+  catches_ss3_formatted,
+  dir = "data-tables"
 )
 
 #===============================================================================
@@ -9,12 +49,7 @@ processed_final_catches <- dplyr::bind_rows(
 
 ggplot2::ggplot(
   processed_final_catches,
-  ggplot2::aes(x = year, y = catch_mt, fill = source)
+  ggplot2::aes(x = year, y = catch_mt)
 ) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::facet_grid("species", scales = "free_y")
-
-usethis::use_data(
-  processed_final_catches,
-  overwrite = TRUE
-)

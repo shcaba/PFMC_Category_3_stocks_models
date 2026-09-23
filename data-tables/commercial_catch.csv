@@ -1,279 +1,214 @@
-"source","species","fleet","year","catch_mt"
-"pacfin","stripetail rockfish","commercial",1981,354.8305
-"pacfin","stripetail rockfish","commercial",1982,427.3539
-"pacfin","stripetail rockfish","commercial",1983,384.8262
-"pacfin","stripetail rockfish","commercial",1984,284.7011
-"pacfin","stripetail rockfish","commercial",1985,558.4198
-"pacfin","stripetail rockfish","commercial",1986,228.5282
-"pacfin","stripetail rockfish","commercial",1987,326.818
-"pacfin","stripetail rockfish","commercial",1988,262.6395
-"pacfin","stripetail rockfish","commercial",1989,333.5806
-"pacfin","stripetail rockfish","commercial",1990,386.2837
-"pacfin","stripetail rockfish","commercial",1991,276.2968
-"pacfin","stripetail rockfish","commercial",1992,55.5937
-"pacfin","stripetail rockfish","commercial",1993,509.8346
-"pacfin","stripetail rockfish","commercial",1994,1355.5614
-"pacfin","stripetail rockfish","commercial",1995,576.2011
-"pacfin","stripetail rockfish","commercial",1996,202.2082
-"pacfin","stripetail rockfish","commercial",1997,252.4458
-"pacfin","stripetail rockfish","commercial",1998,534.2005
-"pacfin","stripetail rockfish","commercial",1999,33.7696
-"pacfin","stripetail rockfish","commercial",2000,28.8618
-"pacfin","stripetail rockfish","commercial",2001,59.0429
-"pacfin","stripetail rockfish","commercial",2002,33.8484
-"pacfin","stripetail rockfish","commercial",2003,0.4247
-"pacfin","stripetail rockfish","commercial",2004,14.5974
-"pacfin","stripetail rockfish","commercial",2005,1.7992
-"pacfin","stripetail rockfish","commercial",2006,14.8113
-"pacfin","stripetail rockfish","commercial",2007,9.1765
-"pacfin","stripetail rockfish","commercial",2008,13.3333
-"pacfin","stripetail rockfish","commercial",2009,12.4255
-"pacfin","stripetail rockfish","commercial",2010,16
-"pacfin","stripetail rockfish","commercial",2011,3.4249
-"pacfin","stripetail rockfish","commercial",2012,13.7494
-"pacfin","stripetail rockfish","commercial",2013,19.1473
-"pacfin","stripetail rockfish","commercial",2014,14.9239
-"pacfin","stripetail rockfish","commercial",2015,16.8088
-"pacfin","stripetail rockfish","commercial",2016,8.9108
-"pacfin","stripetail rockfish","commercial",2017,29.5408
-"pacfin","stripetail rockfish","commercial",2018,39.9574
-"pacfin","stripetail rockfish","commercial",2019,65.5895
-"pacfin","stripetail rockfish","commercial",2020,65.4994
-"pacfin","stripetail rockfish","commercial",2021,79.3118
-"pacfin","stripetail rockfish","commercial",2022,47.0581
-"pacfin","stripetail rockfish","commercial",2023,48.898
-"pacfin","stripetail rockfish","commercial",2024,46.3249
-"pacfin","stripetail rockfish","commercial",2025,47.4759
-"pacfin","pacific sanddab","commercial",1982,860.3408
-"pacfin","pacific sanddab","commercial",1983,464.9846
-"pacfin","pacific sanddab","commercial",1987,1371.131
-"pacfin","pacific sanddab","commercial",1988,1156.1915
-"pacfin","pacific sanddab","commercial",1989,1294.2494
-"pacfin","pacific sanddab","commercial",1990,1561.3648
-"pacfin","pacific sanddab","commercial",1991,1572.0414
-"pacfin","pacific sanddab","commercial",1992,1081.7449
-"pacfin","pacific sanddab","commercial",1993,1141.8767
-"pacfin","pacific sanddab","commercial",1994,2155.732
-"pacfin","pacific sanddab","commercial",1995,2439.0275
-"pacfin","pacific sanddab","commercial",1996,1587.1881
-"pacfin","pacific sanddab","commercial",1997,2082.461
-"pacfin","pacific sanddab","commercial",1998,1379.5328
-"pacfin","pacific sanddab","commercial",1999,2156.1354
-"pacfin","pacific sanddab","commercial",2000,1589.4315
-"pacfin","pacific sanddab","commercial",2001,1589.2982
-"pacfin","pacific sanddab","commercial",2002,3147.199
-"pacfin","pacific sanddab","commercial",2003,957.0872
-"pacfin","pacific sanddab","commercial",2004,654.0191
-"pacfin","pacific sanddab","commercial",2005,481.2584
-"pacfin","pacific sanddab","commercial",2006,754.2441
-"pacfin","pacific sanddab","commercial",2007,593.7581
-"pacfin","pacific sanddab","commercial",2008,294.9324
-"pacfin","pacific sanddab","commercial",2009,683.879
-"pacfin","pacific sanddab","commercial",2010,345.0325
-"pacfin","pacific sanddab","commercial",2011,242.0213
-"pacfin","pacific sanddab","commercial",2012,225.7812
-"pacfin","pacific sanddab","commercial",2013,217.9891
-"pacfin","pacific sanddab","commercial",2014,331.9237
-"pacfin","pacific sanddab","commercial",2015,296.4958
-"pacfin","pacific sanddab","commercial",2016,234.4809
-"pacfin","pacific sanddab","commercial",2017,150.2059
-"pacfin","pacific sanddab","commercial",2018,148.3207
-"pacfin","pacific sanddab","commercial",2019,82.3907
-"pacfin","pacific sanddab","commercial",2020,41.5959
-"pacfin","pacific sanddab","commercial",2021,87.569
-"pacfin","pacific sanddab","commercial",2022,83.1531
-"pacfin","pacific sanddab","commercial",2023,95.4583
-"pacfin","pacific sanddab","commercial",2024,84.1519
-"pacfin","pacific sanddab","commercial",2025,93.1765
-"pacfin","pacific sanddab","commercial",1981,771.6962
-"pacfin","pacific sanddab","commercial",1984,447.9974
-"pacfin","pacific sanddab","commercial",1985,796.99
-"pacfin","pacific sanddab","commercial",1986,831.6021
-"wa_rockfish_reconstruction","stripetail rockfish","commercial",1975,0.9207
-"wa_rockfish_reconstruction","stripetail rockfish","commercial",1977,2.3503
-"wa_rockfish_reconstruction","stripetail rockfish","commercial",1978,5.8068
-"wa_rockfish_reconstruction","stripetail rockfish","commercial",1979,4.1094
-"2013 assessment","pacific sanddab","commercial",1889,59
-"2013 assessment","pacific sanddab","commercial",1890,118.1
-"2013 assessment","pacific sanddab","commercial",1891,177.1
-"2013 assessment","pacific sanddab","commercial",1892,236.1
-"2013 assessment","pacific sanddab","commercial",1893,217.6
-"2013 assessment","pacific sanddab","commercial",1894,199.1
-"2013 assessment","pacific sanddab","commercial",1895,180.6
-"2013 assessment","pacific sanddab","commercial",1896,198.7
-"2013 assessment","pacific sanddab","commercial",1897,216.7
-"2013 assessment","pacific sanddab","commercial",1898,234.7
-"2013 assessment","pacific sanddab","commercial",1899,252.8
-"2013 assessment","pacific sanddab","commercial",1900,291.5
-"2013 assessment","pacific sanddab","commercial",1901,330.3
-"2013 assessment","pacific sanddab","commercial",1902,369
-"2013 assessment","pacific sanddab","commercial",1903,407.8
-"2013 assessment","pacific sanddab","commercial",1904,446.5
-"2013 assessment","pacific sanddab","commercial",1905,429.8
-"2013 assessment","pacific sanddab","commercial",1906,413.1
-"2013 assessment","pacific sanddab","commercial",1907,396.4
-"2013 assessment","pacific sanddab","commercial",1908,379.6
-"2013 assessment","pacific sanddab","commercial",1909,422.1
-"2013 assessment","pacific sanddab","commercial",1910,464.5
-"2013 assessment","pacific sanddab","commercial",1911,506.9
-"2013 assessment","pacific sanddab","commercial",1912,549.3
-"2013 assessment","pacific sanddab","commercial",1913,591.7
-"2013 assessment","pacific sanddab","commercial",1914,634.1
-"2013 assessment","pacific sanddab","commercial",1915,676.6
-"2013 assessment","pacific sanddab","commercial",1916,1010.9
-"2013 assessment","pacific sanddab","commercial",1917,1193.8
-"2013 assessment","pacific sanddab","commercial",1918,794.5
-"2013 assessment","pacific sanddab","commercial",1919,321.9
-"2013 assessment","pacific sanddab","commercial",1920,327.4
-"2013 assessment","pacific sanddab","commercial",1921,355.6
-"2013 assessment","pacific sanddab","commercial",1922,531.1
-"2013 assessment","pacific sanddab","commercial",1923,618.7
-"2013 assessment","pacific sanddab","commercial",1924,771
-"2013 assessment","pacific sanddab","commercial",1925,885.8
-"2013 assessment","pacific sanddab","commercial",1926,518.9
-"2013 assessment","pacific sanddab","commercial",1927,404.9
-"2013 assessment","pacific sanddab","commercial",1928,502.9
-"2013 assessment","pacific sanddab","commercial",1929,477.1
-"2013 assessment","pacific sanddab","commercial",1930,279.6
-"2013 assessment","pacific sanddab","commercial",1931,214.5
-"2013 assessment","pacific sanddab","commercial",1932,302
-"2013 assessment","pacific sanddab","commercial",1933,247.9
-"2013 assessment","pacific sanddab","commercial",1934,348
-"2013 assessment","pacific sanddab","commercial",1935,306.6
-"2013 assessment","pacific sanddab","commercial",1936,282.9
-"2013 assessment","pacific sanddab","commercial",1937,238.7
-"2013 assessment","pacific sanddab","commercial",1938,301.3
-"2013 assessment","pacific sanddab","commercial",1939,382.4
-"2013 assessment","pacific sanddab","commercial",1940,378.9
-"2013 assessment","pacific sanddab","commercial",1941,231
-"2013 assessment","pacific sanddab","commercial",1942,238.9
-"2013 assessment","pacific sanddab","commercial",1943,427.1
-"2013 assessment","pacific sanddab","commercial",1944,284.4
-"2013 assessment","pacific sanddab","commercial",1945,283.7
-"2013 assessment","pacific sanddab","commercial",1946,325.1
-"2013 assessment","pacific sanddab","commercial",1947,356.3
-"2013 assessment","pacific sanddab","commercial",1948,426.6
-"2013 assessment","pacific sanddab","commercial",1949,410.6
-"2013 assessment","pacific sanddab","commercial",1950,316.8
-"2013 assessment","pacific sanddab","commercial",1951,252.1
-"2013 assessment","pacific sanddab","commercial",1952,299.6
-"2013 assessment","pacific sanddab","commercial",1953,318.7
-"2013 assessment","pacific sanddab","commercial",1954,349.1
-"2013 assessment","pacific sanddab","commercial",1955,379.9
-"2013 assessment","pacific sanddab","commercial",1956,359.3
-"2013 assessment","pacific sanddab","commercial",1957,314
-"2013 assessment","pacific sanddab","commercial",1958,185.2
-"2013 assessment","pacific sanddab","commercial",1959,214.9
-"2013 assessment","pacific sanddab","commercial",1960,166.1
-"2013 assessment","pacific sanddab","commercial",1961,230.8
-"2013 assessment","pacific sanddab","commercial",1962,317.9
-"2013 assessment","pacific sanddab","commercial",1963,255.3
-"2013 assessment","pacific sanddab","commercial",1964,458.8
-"2013 assessment","pacific sanddab","commercial",1965,219.7
-"2013 assessment","pacific sanddab","commercial",1966,335.7
-"2013 assessment","pacific sanddab","commercial",1967,322.8
-"2013 assessment","pacific sanddab","commercial",1968,333.5
-"2013 assessment","pacific sanddab","commercial",1969,337.8
-"2013 assessment","pacific sanddab","commercial",1970,338.1
-"2013 assessment","pacific sanddab","commercial",1971,382.8
-"2013 assessment","pacific sanddab","commercial",1972,472.7
-"2013 assessment","pacific sanddab","commercial",1973,503.1
-"2013 assessment","pacific sanddab","commercial",1974,560.2
-"2013 assessment","pacific sanddab","commercial",1975,635.9
-"2013 assessment","pacific sanddab","commercial",1976,743.9
-"2013 assessment","pacific sanddab","commercial",1977,484.1
-"2013 assessment","pacific sanddab","commercial",1978,453.9
-"2013 assessment","pacific sanddab","commercial",1979,824.1
-"2013 assessment","pacific sanddab","commercial",1980,766.9
-"2013 assessment","pacific sanddab","mink",1889,0
-"2013 assessment","pacific sanddab","mink",1890,0
-"2013 assessment","pacific sanddab","mink",1891,0
-"2013 assessment","pacific sanddab","mink",1892,0
-"2013 assessment","pacific sanddab","mink",1893,0
-"2013 assessment","pacific sanddab","mink",1894,0
-"2013 assessment","pacific sanddab","mink",1895,0
-"2013 assessment","pacific sanddab","mink",1896,0
-"2013 assessment","pacific sanddab","mink",1897,0
-"2013 assessment","pacific sanddab","mink",1898,0
-"2013 assessment","pacific sanddab","mink",1899,0
-"2013 assessment","pacific sanddab","mink",1900,0
-"2013 assessment","pacific sanddab","mink",1901,0
-"2013 assessment","pacific sanddab","mink",1902,0
-"2013 assessment","pacific sanddab","mink",1903,0
-"2013 assessment","pacific sanddab","mink",1904,0
-"2013 assessment","pacific sanddab","mink",1905,0
-"2013 assessment","pacific sanddab","mink",1906,0
-"2013 assessment","pacific sanddab","mink",1907,0
-"2013 assessment","pacific sanddab","mink",1908,0
-"2013 assessment","pacific sanddab","mink",1909,0
-"2013 assessment","pacific sanddab","mink",1910,0
-"2013 assessment","pacific sanddab","mink",1911,0
-"2013 assessment","pacific sanddab","mink",1912,0
-"2013 assessment","pacific sanddab","mink",1913,0
-"2013 assessment","pacific sanddab","mink",1914,0
-"2013 assessment","pacific sanddab","mink",1915,0
-"2013 assessment","pacific sanddab","mink",1916,0
-"2013 assessment","pacific sanddab","mink",1917,0
-"2013 assessment","pacific sanddab","mink",1918,0
-"2013 assessment","pacific sanddab","mink",1919,0
-"2013 assessment","pacific sanddab","mink",1920,0
-"2013 assessment","pacific sanddab","mink",1921,0
-"2013 assessment","pacific sanddab","mink",1922,0
-"2013 assessment","pacific sanddab","mink",1923,0
-"2013 assessment","pacific sanddab","mink",1924,0
-"2013 assessment","pacific sanddab","mink",1925,0
-"2013 assessment","pacific sanddab","mink",1926,0
-"2013 assessment","pacific sanddab","mink",1927,0
-"2013 assessment","pacific sanddab","mink",1928,0
-"2013 assessment","pacific sanddab","mink",1929,0
-"2013 assessment","pacific sanddab","mink",1930,0
-"2013 assessment","pacific sanddab","mink",1931,0
-"2013 assessment","pacific sanddab","mink",1932,0
-"2013 assessment","pacific sanddab","mink",1933,0
-"2013 assessment","pacific sanddab","mink",1934,0
-"2013 assessment","pacific sanddab","mink",1935,0
-"2013 assessment","pacific sanddab","mink",1936,0
-"2013 assessment","pacific sanddab","mink",1937,0
-"2013 assessment","pacific sanddab","mink",1938,0
-"2013 assessment","pacific sanddab","mink",1939,0
-"2013 assessment","pacific sanddab","mink",1940,0
-"2013 assessment","pacific sanddab","mink",1941,0
-"2013 assessment","pacific sanddab","mink",1942,5.6
-"2013 assessment","pacific sanddab","mink",1943,5.9
-"2013 assessment","pacific sanddab","mink",1944,6.3
-"2013 assessment","pacific sanddab","mink",1945,5.6
-"2013 assessment","pacific sanddab","mink",1946,5.8
-"2013 assessment","pacific sanddab","mink",1947,6.5
-"2013 assessment","pacific sanddab","mink",1948,10
-"2013 assessment","pacific sanddab","mink",1949,9.9
-"2013 assessment","pacific sanddab","mink",1950,7.3
-"2013 assessment","pacific sanddab","mink",1951,8.8
-"2013 assessment","pacific sanddab","mink",1952,9.2
-"2013 assessment","pacific sanddab","mink",1953,23.1
-"2013 assessment","pacific sanddab","mink",1954,30.1
-"2013 assessment","pacific sanddab","mink",1955,30.7
-"2013 assessment","pacific sanddab","mink",1956,39.8
-"2013 assessment","pacific sanddab","mink",1957,57.1
-"2013 assessment","pacific sanddab","mink",1958,98.5
-"2013 assessment","pacific sanddab","mink",1959,28
-"2013 assessment","pacific sanddab","mink",1960,37.7
-"2013 assessment","pacific sanddab","mink",1961,41.4
-"2013 assessment","pacific sanddab","mink",1962,31.7
-"2013 assessment","pacific sanddab","mink",1963,30.8
-"2013 assessment","pacific sanddab","mink",1964,34.1
-"2013 assessment","pacific sanddab","mink",1965,38.8
-"2013 assessment","pacific sanddab","mink",1966,27.1
-"2013 assessment","pacific sanddab","mink",1967,31.1
-"2013 assessment","pacific sanddab","mink",1968,25.8
-"2013 assessment","pacific sanddab","mink",1969,24.5
-"2013 assessment","pacific sanddab","mink",1970,14.3
-"2013 assessment","pacific sanddab","mink",1971,13
-"2013 assessment","pacific sanddab","mink",1972,5.2
-"2013 assessment","pacific sanddab","mink",1973,4.3
-"2013 assessment","pacific sanddab","mink",1974,47.5
-"2013 assessment","pacific sanddab","mink",1975,63.1
-"2013 assessment","pacific sanddab","mink",1976,40
-"2013 assessment","pacific sanddab","mink",1977,35.1
-"2013 assessment","pacific sanddab","mink",1978,0.4
-"2013 assessment","pacific sanddab","mink",1979,0.1
-"2013 assessment","pacific sanddab","mink",1980,0.8
+"species","year","landings_mt","discard_mt","catch_mt"
+"pacific sanddab",1896,0,0,0
+"pacific sanddab",1897,0,0,0
+"pacific sanddab",1898,0,0,0
+"pacific sanddab",1899,0,0,0
+"pacific sanddab",1900,0,0,0
+"pacific sanddab",1901,0,0,0
+"pacific sanddab",1902,0,0,0
+"pacific sanddab",1903,0,0,0
+"pacific sanddab",1904,0,0,0
+"pacific sanddab",1905,0,0,0
+"pacific sanddab",1906,0,0,0
+"pacific sanddab",1907,0,0,0
+"pacific sanddab",1908,0,0,0
+"pacific sanddab",1909,0,0,0
+"pacific sanddab",1910,0,0,0
+"pacific sanddab",1911,0,0,0
+"pacific sanddab",1912,0,0,0
+"pacific sanddab",1913,0,0,0
+"pacific sanddab",1914,0,0,0
+"pacific sanddab",1915,0,0,0
+"pacific sanddab",1916,0,0,0
+"pacific sanddab",1917,0,0,0
+"pacific sanddab",1918,0,0,0
+"pacific sanddab",1919,0,0,0
+"pacific sanddab",1920,0,0,0
+"pacific sanddab",1921,0,0,0
+"pacific sanddab",1922,0,0,0
+"pacific sanddab",1923,0,0,0
+"pacific sanddab",1924,0,0,0
+"pacific sanddab",1925,0,0,0
+"pacific sanddab",1926,0,0,0
+"pacific sanddab",1928,0,0,0
+"pacific sanddab",1929,0,0,0
+"pacific sanddab",1930,1e-04,0,1e-04
+"pacific sanddab",1931,1e-04,0,1e-04
+"pacific sanddab",1932,0.4388,0.1238,0.5626
+"pacific sanddab",1933,0.2044,0.0577,0.2621
+"pacific sanddab",1934,0.0764,0.0215,0.0979
+"pacific sanddab",1935,0.2176,0.0614,0.279
+"pacific sanddab",1936,0.8506,0.2399,1.0905
+"pacific sanddab",1937,4.3062,1.2146,5.5208
+"pacific sanddab",1938,0.0884,0.0249,0.1133
+"pacific sanddab",1939,13.4057,3.7811,17.1868
+"pacific sanddab",1940,24.0834,6.7928,30.8762
+"pacific sanddab",1941,28.7439,8.1073,36.8512
+"pacific sanddab",1942,74.1498,20.914,95.0638
+"pacific sanddab",1943,187.2677,52.8191,240.0868
+"pacific sanddab",1944,33.1075,9.338,42.4455
+"pacific sanddab",1945,14.3222,4.0396,18.3618
+"pacific sanddab",1946,16.4983,4.6534,21.1517
+"pacific sanddab",1947,36.9643,10.4258,47.3901
+"pacific sanddab",1948,62.6114,17.6597,80.2711
+"pacific sanddab",1949,82.7585,23.3421,106.1006
+"pacific sanddab",1950,5.4837,1.5467,7.0304
+"pacific sanddab",1951,8.3786,2.3632,10.7418
+"pacific sanddab",1952,3.7918,1.0695,4.8613
+"pacific sanddab",1953,22.8011,6.4311,29.2322
+"pacific sanddab",1954,27.5652,7.7748,35.34
+"pacific sanddab",1955,43.0231,12.1348,55.1579
+"pacific sanddab",1956,20.5722,5.8024,26.3746
+"pacific sanddab",1957,39.6769,11.1909,50.8678
+"pacific sanddab",1958,81.2172,22.9074,104.1246
+"pacific sanddab",1959,10.4258,2.9406,13.3664
+"pacific sanddab",1960,21.7901,6.1459,27.936
+"pacific sanddab",1961,24.5535,6.9253,31.4788
+"pacific sanddab",1962,30.2712,8.5381,38.8093
+"pacific sanddab",1963,28.1608,7.9428,36.1036
+"pacific sanddab",1964,30.2042,8.5191,38.7233
+"pacific sanddab",1965,25.1491,7.0934,32.2425
+"pacific sanddab",1966,22.3903,6.3152,28.7055
+"pacific sanddab",1967,27.1741,7.6645,34.8386
+"pacific sanddab",1968,20.2785,5.7196,25.9981
+"pacific sanddab",1969,31.9411,9.009,40.9501
+"pacific sanddab",1970,37.0218,10.4421,47.4639
+"pacific sanddab",1971,34.792,9.8131,44.6051
+"pacific sanddab",1972,54.9643,15.5027,70.467
+"pacific sanddab",1973,90.3822,25.4924,115.8746
+"pacific sanddab",1974,158.3195,44.6542,202.9737
+"pacific sanddab",1975,228.5592,64.4654,293.0246
+"pacific sanddab",1976,188.2081,53.0843,241.2924
+"pacific sanddab",1977,145.448,41.0238,186.4718
+"pacific sanddab",1978,110.6459,31.2078,141.8537
+"pacific sanddab",1979,211.6107,59.685,271.2957
+"pacific sanddab",1980,175.6268,49.5358,225.1626
+"pacific sanddab",1981,581.5126,164.0163,745.5289
+"pacific sanddab",1982,714.7076,201.5842,916.2918
+"pacific sanddab",1983,498.1718,140.51,638.6818
+"pacific sanddab",1984,526.4851,148.4958,674.9809
+"pacific sanddab",1985,620.4333,174.994,795.4273
+"pacific sanddab",1986,605.9523,170.9097,776.862
+"pacific sanddab",1987,759.0125,214.0804,973.0929
+"pacific sanddab",1988,640.0291,180.5211,820.5502
+"pacific sanddab",1989,716.4532,202.0766,918.5298
+"pacific sanddab",1990,864.3194,243.7824,1108.1018
+"pacific sanddab",1991,870.2297,245.4494,1115.6791
+"pacific sanddab",1992,598.8179,168.8973,767.7152
+"pacific sanddab",1993,632.1049,178.286,810.3909
+"pacific sanddab",1994,1193.3413,336.5834,1529.9247
+"pacific sanddab",1995,1350.1643,380.8155,1730.9798
+"pacific sanddab",1996,878.6144,247.8144,1126.4288
+"pacific sanddab",1997,1152.781,325.1434,1477.9244
+"pacific sanddab",1998,763.6634,215.3923,979.0557
+"pacific sanddab",1999,1193.5648,336.6465,1530.2113
+"pacific sanddab",2000,879.8563,248.1646,1128.0209
+"pacific sanddab",2001,879.7825,248.1437,1127.9262
+"pacific sanddab",2002,817.6424,230.6171,1048.2595
+"pacific sanddab",2003,640.9213,334.0123,974.9336
+"pacific sanddab",2004,490.831,177.0572,667.8882
+"pacific sanddab",2005,248.2288,262.8455,511.0743
+"pacific sanddab",2006,431.4974,362.28,793.7774
+"pacific sanddab",2007,308.3301,339.6945,648.0246
+"pacific sanddab",2008,200.2161,103.3256,303.5417
+"pacific sanddab",2009,293.096,430.7766,723.8726
+"pacific sanddab",2010,156.188,189.5137,345.7017
+"pacific sanddab",2011,162.9723,112.8779,275.8502
+"pacific sanddab",2012,156.1762,78.1818,234.358
+"pacific sanddab",2013,147.6316,72.8128,220.4444
+"pacific sanddab",2014,221.8772,126.4387,348.3159
+"pacific sanddab",2015,164.202,135.3274,299.5294
+"pacific sanddab",2016,101.3588,133.4311,234.7899
+"pacific sanddab",2017,82.4861,67.844,150.3301
+"pacific sanddab",2018,90.6891,57.8355,148.5246
+"pacific sanddab",2019,51.5741,31.5428,83.1169
+"pacific sanddab",2020,23.4,18.2,41.6
+"pacific sanddab",2021,58.506,38.8904,97.3964
+"pacific sanddab",2022,30.4849,52.6936,83.1785
+"pacific sanddab",2023,55.0175,40.4493,95.4668
+"pacific sanddab",2024,46.2659,37.9151,84.181
+"pacific sanddab",2025,58.9713,34.205,93.1763
+"stripetail rockfish",1942,0.0307,0.0251,0.0558
+"stripetail rockfish",1943,0.2454,0.2008,0.4462
+"stripetail rockfish",1944,0.4253,0.348,0.7733
+"stripetail rockfish",1945,0.0452,0.037,0.0822
+"stripetail rockfish",1946,0.2086,0.1707,0.3793
+"stripetail rockfish",1947,0.6125,0.5011,1.1136
+"stripetail rockfish",1948,2.5558,2.0911,4.6469
+"stripetail rockfish",1949,2.7449,2.2458,4.9907
+"stripetail rockfish",1950,1.4353,1.1743,2.6096
+"stripetail rockfish",1951,2.4075,1.9698,4.3773
+"stripetail rockfish",1952,3.4323,2.8082,6.2405
+"stripetail rockfish",1953,1.8522,1.5154,3.3676
+"stripetail rockfish",1954,10.5956,8.6691,19.2647
+"stripetail rockfish",1955,9.6699,7.9117,17.5816
+"stripetail rockfish",1956,23.5585,19.2751,42.8336
+"stripetail rockfish",1957,11.9004,9.7367,21.6371
+"stripetail rockfish",1958,3.0311,2.48,5.5111
+"stripetail rockfish",1959,2.8235,2.3101,5.1336
+"stripetail rockfish",1960,7.5409,6.1698,13.7107
+"stripetail rockfish",1961,6.4682,5.2922,11.7604
+"stripetail rockfish",1962,6.7695,5.5387,12.3082
+"stripetail rockfish",1963,3.7731,3.0871,6.8602
+"stripetail rockfish",1964,7.534,6.1642,13.6982
+"stripetail rockfish",1965,10.9885,8.9906,19.9791
+"stripetail rockfish",1966,12.6006,10.3096,22.9102
+"stripetail rockfish",1967,15.024,12.2924,27.3164
+"stripetail rockfish",1968,2.7865,2.2799,5.0664
+"stripetail rockfish",1969,2.3822,1.9491,4.3313
+"stripetail rockfish",1970,1.8361,1.5023,3.3384
+"stripetail rockfish",1971,21.1666,17.3181,38.4847
+"stripetail rockfish",1972,17.6318,14.426,32.0578
+"stripetail rockfish",1973,2.3532,1.9253,4.2785
+"stripetail rockfish",1974,4.0929,3.3487,7.4416
+"stripetail rockfish",1975,1.7114,1.4003,3.1117
+"stripetail rockfish",1976,0.1236,0.1011,0.2247
+"stripetail rockfish",1977,0.8551,0.6996,1.5547
+"stripetail rockfish",1978,4.6462,3.8015,8.4477
+"stripetail rockfish",1979,7.2579,5.9383,13.1962
+"stripetail rockfish",1980,2.4882,2.0358,4.524
+"stripetail rockfish",1981,36.6278,29.9682,66.596
+"stripetail rockfish",1982,42.4174,34.7052,77.1226
+"stripetail rockfish",1983,42.8808,35.0843,77.9651
+"stripetail rockfish",1984,27.6655,22.6355,50.301
+"stripetail rockfish",1985,49.1649,40.2259,89.3908
+"stripetail rockfish",1986,19.6644,16.0891,35.7535
+"stripetail rockfish",1987,29.8101252619896,24.3901,54.2002
+"stripetail rockfish",1988,21.687997955612,17.7447,39.4327
+"stripetail rockfish",1989,28.5995296502296,23.3996,51.9991
+"stripetail rockfish",1990,34.1143254772984,27.9118,62.0261
+"stripetail rockfish",1991,23.3212606446704,19.0811,42.4024
+"stripetail rockfish",1992,5.8325575930568,4.7721,10.6047
+"stripetail rockfish",1993,42.1984317025168,34.5261,76.7245
+"stripetail rockfish",1994,112.420968138685,12.4913,124.9123
+"stripetail rockfish",1995,48.5744628509856,39.7428,88.3173
+"stripetail rockfish",1996,17.893886362844,14.6404,32.5343
+"stripetail rockfish",1997,21.9063098576344,17.9234,39.8297
+"stripetail rockfish",1998,45.316893835336,37.0775,82.3944
+"stripetail rockfish",1999,5.0784544552432,4.1551,9.2336
+"stripetail rockfish",2000,2.3823,1.9491,4.3314
+"stripetail rockfish",2001,4.8735,3.9874,8.8609
+"stripetail rockfish",2002,1.1609,32.6846,33.8455
+"stripetail rockfish",2003,0.1253,0.2994,0.4247
+"stripetail rockfish",2004,0.1124,14.485,14.5974
+"stripetail rockfish",2005,0.3163,1.4829,1.7992
+"stripetail rockfish",2006,0.157,14.6543,14.8113
+"stripetail rockfish",2007,0.0312,9.1453,9.1765
+"stripetail rockfish",2008,0.008,13.3254,13.3334
+"stripetail rockfish",2009,0.0584,12.3671,12.4255
+"stripetail rockfish",2010,0.0048,15.9952,16
+"stripetail rockfish",2011,0.2918,3.1331,3.4249
+"stripetail rockfish",2012,0.5486,13.2008,13.7494
+"stripetail rockfish",2013,0.988,18.1593,19.1473
+"stripetail rockfish",2014,0.8237,14.0984,14.9221
+"stripetail rockfish",2015,0.422,16.3908,16.8128
+"stripetail rockfish",2016,0.6692,8.2415,8.9107
+"stripetail rockfish",2017,2.1359,27.4063,29.5422
+"stripetail rockfish",2018,1.878,38.0795,39.9575
+"stripetail rockfish",2019,4.1387,61.4509,65.5896
+"stripetail rockfish",2020,5.3775,60.1219,65.4994
+"stripetail rockfish",2021,6.0277,73.2842,79.3119
+"stripetail rockfish",2022,6.8046,40.2535,47.0581
+"stripetail rockfish",2023,10.8359,38.0626,48.8985
+"stripetail rockfish",2024,11.4794,34.8458,46.3252
+"stripetail rockfish",2025,7.6911,39.7848,47.4759
