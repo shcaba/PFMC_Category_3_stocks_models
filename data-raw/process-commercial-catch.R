@@ -293,7 +293,7 @@ ggplot2::ggplot(
 #===============================================================================
 # Format removals for used to composition expansions
 #===============================================================================
-pacfin_landings_by_state <- commercial_mortality_by_source |>
+landings_by_state_for_expansion <- commercial_mortality_by_source |>
   dplyr::summarise(
     .by = c(species, state, year),
     landings_mt = round(sum(landings_mt), 4)
@@ -301,7 +301,7 @@ pacfin_landings_by_state <- commercial_mortality_by_source |>
   dplyr::arrange(species, state, year)
 
 usethis::use_data(
-  pacfin_landings_by_state,
+  landings_by_state_for_expansion,
   overwrite = TRUE
 )
 

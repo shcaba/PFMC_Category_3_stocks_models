@@ -36,9 +36,19 @@ bds_clean_sanddab <- pacfintools::cleanPacFIN(
 # SEX F: 32605, M: 5527, U: 3644
 # observed size of females > males
 
+landings <- landings_by_state_for_expansion |>
+  dplyr::mutate(
+    state = dplyr::if_else(
+      state == "california",
+      "C",
+      dplyr::if_else(state == "oregon", "O", "W")
+    )
+  )
+
 # Stripetail rockfish ==========================================================
+length_bins <- seq(6, 28, 2)
 formatted_catch_stripetail <- pacfintools::formatCatch(
-  catch = pacfin_landings_by_state |>
+  catch = landings |>
     dplyr::filter(species == "stripetail rockfish"),
   strat = c("state"),
   valuename = "landings_mt"
@@ -73,20 +83,21 @@ length_comps_long <- pacfintools::getComps(
   verbose = FALSE
 )
 
-stripetail_pacfin_length_composition_data <- pacfintools::writeComps(
+retained_lengths_stripetail <- pacfintools::writeComps(
   inComps = length_comps_long,
   column_with_input_n = "n_stewart",
   comp_bins = length_bins,
   verbose = FALSE
 ) |>
   dplyr::mutate(
-    fleet = "retained-comps"
+    month = 7,
+    fleet = "landed-comps"
   )
 
 # Pacific sanddab ==============================================================
 length_bins <- seq(8, 32, 2)
 formatted_catch_sanddab <- pacfintools::formatCatch(
-  catch = pacfin_landings_by_state |>
+  catch = landings |>
     dplyr::filter(species == "pacific sanddab"),
   strat = c("state"),
   valuename = "landings_mt"
@@ -112,21 +123,71 @@ length_comps_long <- getComps(
   verbose = TRUE
 )
 
-sanddab_pacfin_length_composition_data <- writeComps(
+retained_lengths_sanddab <- writeComps(
   inComps = length_comps_long,
   column_with_input_n = "n_stewart",
   comp_bins = length_bins,
   verbose = FALSE
 ) |>
   dplyr::mutate(
-    fleet = "retained-comps"
+    month = 7,
+    fleet = "landed-comps"
   )
+
+#===============================================================================
+# Grab the WCGOP comp files
+#===============================================================================
+discard_comp_stripetail <-
+  read.csv(here::here(
+    drive,
+    "Stripetail Rockfish",
+    "wcgop",
+    "wcgop_discard_lengths.csv"
+  )) |>
+  dplyr::mutate(
+    fleet = "discard-comps",
+    partition = 2
+  )
+discard_comp_sanddab <-
+  read.csv(here::here(
+    drive,
+    "Pacific Sanddab",
+    "wcgop",
+    "wcgop_discard_lengths.csv"
+  )) |>
+  dplyr::mutate(
+    fleet = "discard-comps",
+    partition = 2
+  )
+
+discard_lengths_sanddab <- cbind(
+  discard_comp_sanddab,
+  discard_comp_sanddab[, 7:ncol(discard_comp_sanddab)]
+)
+discard_lengths_stripetail <- cbind(
+  discard_comp_stripetail,
+  discard_comp_stripetail[, 7:ncol(discard_comp_stripetail)]
+)
+
 
 #===============================================================================
 # Save composition data formatted for SS3
 #===============================================================================
+colnames(discard_lengths_stripetail) <- colnames(retained_lengths_stripetail)
+colnames(discard_lengths_sanddab) <- colnames(retained_lengths_sanddab)
+
+length_composition_data_sanndab <- dplyr::bind_rows(
+  as.data.frame(retained_lengths_sanddab) |>
+    dplyr::mutate(month = as.numeric(month)),
+  discard_lengths_sanddab
+)
+length_composition_data_stripetail <- dplyr::bind_rows(
+  as.data.frame(retained_lengths_stripetail) |>
+    dplyr::mutate(month = as.numeric(month)),
+  as.data.frame(discard_lengths_stripetail)
+)
 write_named_csvs(
-  stripetail_pacfin_length_composition_data,
-  sanddab_pacfin_length_composition_data,
+  length_composition_data_sanndab,
+  length_composition_data_stripetail,
   dir = here::here("data-tables")
 )
