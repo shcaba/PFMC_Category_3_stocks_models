@@ -47,9 +47,30 @@ write_named_csvs(
 # Visual check
 #===============================================================================
 
-ggplot2::ggplot(
-  processed_final_catches,
+plot_1 <- ggplot2::ggplot(
+  commercial_catch,
   ggplot2::aes(x = year, y = catch_mt)
 ) +
   ggplot2::geom_bar(stat = "identity") +
-  ggplot2::facet_grid("species", scales = "free_y")
+  ggplot2::facet_wrap("species", scales = "free_y")
+
+plot_2 <- ggplot2::ggplot(
+  commercial_catch,
+  ggplot2::aes(x = year, y = discard_mt)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_wrap("species", scales = "free_y")
+
+plot_3 <- ggplot2::ggplot(
+  commercial_catch,
+  ggplot2::aes(x = year, y = landings_mt)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_wrap("species", scales = "free_y")
+
+cowplot::plot_grid(
+  plot_1,
+  plot_2,
+  plot_3,
+  nrow = 3
+)
