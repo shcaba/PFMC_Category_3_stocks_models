@@ -46,7 +46,7 @@ landings <- landings_by_state_for_expansion |>
   )
 
 # Stripetail rockfish ==========================================================
-length_bins <- seq(6, 28, 2)
+length_bins <- seq(6, 36, 2)
 formatted_catch_stripetail <- pacfintools::formatCatch(
   catch = landings |>
     dplyr::filter(species == "stripetail rockfish"),
@@ -64,7 +64,7 @@ formatted_catch_stripetail <- pacfintools::formatCatch(
 expanded_comps <- pacfintools::get_pacfin_expansions(
   Pdata = bds_clean_stripetail |>
     # temporarily removing records before 1981 (all in CA) because we don't have
-    # CA historical catches yet
+    # CA historical catches yet (1977 = 21, 1978 = 131, 1979 = 139, 1980 = 53)
     dplyr::filter(year >= 1981) |>
     dplyr::mutate(stratification = AGENCY_CODE),
   Catch = formatted_catch_stripetail,
@@ -94,8 +94,116 @@ retained_lengths_stripetail <- pacfintools::writeComps(
     fleet = "landed-comps"
   )
 
+# split by sex for Jason:
+length_comps_long_f <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "F"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+length_comps_long_m <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "M"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+length_comps_long_u <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "U"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+
+new_col_names <- c(
+  "year",
+  "month",
+  "fleet",
+  "sex",
+  "partition",
+  "input_n",
+  length_bins
+)
+retained_lengths_stripetail_by_sex <- dplyr::bind_rows(
+  pacfintools::writeComps(
+    inComps = length_comps_long_u |> dplyr::filter(SEX_CODE == "U"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 0,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    ),
+  pacfintools::writeComps(
+    inComps = length_comps_long_f |> dplyr::filter(SEX_CODE == "F"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 1,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    ),
+  pacfintools::writeComps(
+    inComps = length_comps_long_m |> dplyr::filter(SEX_CODE == "M"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 2,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    )
+)
+new_col_names <- c(
+  "year",
+  "month",
+  "fleet",
+  "sex",
+  "partition",
+  "input_n",
+  length_bins,
+  paste0(length_bins, ".1")
+)
+
+retained_lengths_stripetail_by_sex_wide <- dplyr::bind_cols(
+  retained_lengths_stripetail_by_sex,
+  retained_lengths_stripetail_by_sex[,
+    7:dim(retained_lengths_stripetail_by_sex)[2]
+  ]
+) |>
+  dplyr::rename_with(
+    ~new_col_names
+  )
+
+length_trips_samples_stripetail <- length_comps_long |>
+  dplyr::ungroup() |>
+  dplyr::summarise(
+    .by = c(fishyr, fleet),
+    trips = sum(unique(n_tows)),
+    samples = sum(unique(n_fish)),
+    input_n = sum(unique(n_stewart))
+  ) |>
+  dplyr::rename(year = fishyr) |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+
 # Pacific sanddab ==============================================================
-length_bins <- seq(8, 32, 2)
+length_bins <- seq(8, 40, 2)
 formatted_catch_sanddab <- pacfintools::formatCatch(
   catch = landings |>
     dplyr::filter(species == "pacific sanddab"),
@@ -104,6 +212,7 @@ formatted_catch_sanddab <- pacfintools::formatCatch(
 )
 
 expanded_comps <- pacfintools::get_pacfin_expansions(
+  # There is only 1 length from 1978 collected in CA
   Pdata = bds_clean_sanddab |>
     dplyr::filter(year > 1980) |>
     dplyr::mutate(stratification = AGENCY_CODE),
@@ -116,14 +225,14 @@ expanded_comps <- pacfintools::get_pacfin_expansions(
   verbose = TRUE
 )
 
-length_comps_long <- getComps(
+length_comps_long <- pacfintools::getComps(
   Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm)),
   Comps = "LEN",
   weightid = "Final_Sample_Size_L",
   verbose = TRUE
 )
 
-retained_lengths_sanddab <- writeComps(
+retained_lengths_sanddab <- pacfintools::writeComps(
   inComps = length_comps_long,
   column_with_input_n = "n_stewart",
   comp_bins = length_bins,
@@ -133,6 +242,114 @@ retained_lengths_sanddab <- writeComps(
     month = 7,
     fleet = "landed-comps"
   )
+
+# split by sex for Jason:
+length_comps_long_f <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "F"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+length_comps_long_m <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "M"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+length_comps_long_u <- pacfintools::getComps(
+  Pdata = expanded_comps |> dplyr::filter(!is.na(lengthcm), SEX_CODE == "U"),
+  Comps = "LEN",
+  weightid = "Final_Sample_Size_L",
+  verbose = FALSE
+)
+
+new_col_names <- c(
+  "year",
+  "month",
+  "fleet",
+  "sex",
+  "partition",
+  "input_n",
+  length_bins
+)
+retained_lengths_sanddab_by_sex <- dplyr::bind_rows(
+  pacfintools::writeComps(
+    inComps = length_comps_long_u |> dplyr::filter(SEX_CODE == "U"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 0,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    ),
+  pacfintools::writeComps(
+    inComps = length_comps_long_f |> dplyr::filter(SEX_CODE == "F"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 1,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    ),
+  pacfintools::writeComps(
+    inComps = length_comps_long_m |> dplyr::filter(SEX_CODE == "M"),
+    column_with_input_n = "n_stewart",
+    comp_bins = length_bins,
+    verbose = FALSE
+  ) |>
+    dplyr::mutate(
+      month = 7,
+      sex = 2,
+      fleet = "landed-comps"
+    ) |>
+    dplyr::rename_with(
+      ~new_col_names
+    )
+)
+new_col_names <- c(
+  "year",
+  "month",
+  "fleet",
+  "sex",
+  "partition",
+  "input_n",
+  length_bins,
+  paste0(length_bins, ".1")
+)
+
+retained_lengths_sanddab_by_sex_wide <- dplyr::bind_cols(
+  retained_lengths_sanddab_by_sex,
+  retained_lengths_sanddab_by_sex[,
+    7:dim(retained_lengths_sanddab_by_sex)[2]
+  ]
+) |>
+  dplyr::rename_with(
+    ~new_col_names
+  )
+
+length_trips_samples_sanddab <- length_comps_long |>
+  dplyr::ungroup() |>
+  dplyr::summarise(
+    .by = c(fishyr, fleet),
+    trips = sum(unique(n_tows)),
+    samples = sum(unique(n_fish)),
+    input_n = sum(unique(n_stewart))
+  ) |>
+  dplyr::rename(year = fishyr) |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
 
 #===============================================================================
 # Grab the WCGOP comp files
@@ -186,8 +403,31 @@ length_composition_data_stripetail <- dplyr::bind_rows(
     dplyr::mutate(month = as.numeric(month)),
   as.data.frame(discard_lengths_stripetail)
 )
+
+colnames(discard_lengths_stripetail) <- colnames(
+  retained_lengths_stripetail_by_sex_wide
+)
+colnames(discard_lengths_sanddab) <- colnames(
+  retained_lengths_sanddab_by_sex_wide
+)
+
+length_composition_data_sanndab_split_by_sex <- dplyr::bind_rows(
+  as.data.frame(retained_lengths_sanddab_by_sex_wide) |>
+    dplyr::mutate(month = as.numeric(month)),
+  discard_lengths_sanddab
+)
+length_composition_data_stripetail_split_by_sex <- dplyr::bind_rows(
+  as.data.frame(retained_lengths_stripetail_by_sex_wide) |>
+    dplyr::mutate(month = as.numeric(month)),
+  as.data.frame(discard_lengths_stripetail)
+)
+
 write_named_csvs(
   length_composition_data_sanndab,
   length_composition_data_stripetail,
+  length_composition_data_sanndab_split_by_sex,
+  length_composition_data_stripetail_split_by_sex,
+  length_trips_samples_stripetail,
+  length_trips_samples_sanddab,
   dir = here::here("data-tables")
 )
