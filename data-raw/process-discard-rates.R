@@ -1,5 +1,5 @@
 data <- nwfscSurvey::pull_gemm(
-  common_name = c("stripetail rockfish", "Pacific sanddab"),
+  common_name = c("stripetail rockfish", "Pacific sanddab", "bank rockfish"),
   verbose = FALSE
 ) |>
   dplyr::filter(
