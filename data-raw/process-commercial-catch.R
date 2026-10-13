@@ -23,7 +23,10 @@ OR_recon <- readxl::read_excel(
   ),
   sheet = "final_odfw_landings"
 ) |>
-  dplyr::filter(SPECIES_NAME %in% c("Stripetail Rockfish", "Pacific Sanddab"))
+  dplyr::filter(
+    SPECIES_NAME %in%
+      c("Stripetail Rockfish", "Pacific Sanddab", "Bank Rockfish")
+  )
 
 OR_urock <- read.csv(
   here::here(
@@ -33,7 +36,7 @@ OR_urock <- read.csv(
     "Speciated_URCK_POP1_Tickets.csv"
   )
 ) |>
-  dplyr::filter(COMMON_NAM %in% c("STRIPETAIL ROCKFISH"))
+  dplyr::filter(COMMON_NAM %in% c("STRIPETAIL ROCKFISH", "BANK ROCKFISH"))
 
 # 2013 Assessment historical catch
 historical_catch_sanddab_raw <- read.csv(here::here(
@@ -50,6 +53,14 @@ historical_catch_stripetail_raw <- read.csv(here::here(
 ))
 
 # PacFIN data
+load(here::here(
+  drive,
+  "Bank Rockfish",
+  "pacfin",
+  "PacFIN.BANK.CompFT.25.Sep.2026.RData"
+))
+landings_bank <- catch.pacfin
+
 load(here::here(
   drive,
   "Stripetail Rockfish",
@@ -126,7 +137,7 @@ commercial_reconstruction_wa <- WA_rf_ct_recon |>
     discard_mt = 0
   ) |>
   dplyr::filter(
-    species == "stripetail rockfish",
+    species %in% c("stripetail rockfish", "bank rockfish"),
     year < 1981
   )
 
@@ -150,7 +161,7 @@ commercial_reconstruction_species_specific_or <- OR_recon |>
     species = tolower(SPECIES_NAME),
     year = as.numeric(YEAR),
     fleet = dplyr::if_else(
-      MKT_CAT_NAME == "Mink Food" & species == "pacific sanddab",
+      MKT_CAT_NAME == "Mink Food" & species %in% c("pacific sanddab"),
       "mink fishery",
       "commercial"
     )
@@ -185,6 +196,7 @@ cols_to_keep <- c(
   "PACFIN_GROUP_GEAR_CODE"
 )
 pacfin_landings_by_state <- dplyr::bind_rows(
+  landings_bank[, cols_to_keep],
   landings_stripetail[, cols_to_keep],
   landings_sanddab[, cols_to_keep],
   landings_sanddab_general[, cols_to_keep] |>
@@ -203,7 +215,8 @@ pacfin_landings_by_state <- dplyr::bind_rows(
     species = dplyr::replace_values(
       species,
       "nom. pacific sanddab" ~ "pacific sanddab",
-      "nom. stripetail rockfish" ~ "stripetail rockfish"
+      "nom. stripetail rockfish" ~ "stripetail rockfish",
+      "nom. bank rockfish" ~ "bank rockfish"
     ),
     landings_mt = round_weight_mtons,
     year = landing_year,
@@ -341,7 +354,11 @@ commercial_catch <- dplyr::left_join(
     average_discard_rate = mean(discard_rate, na.rm = TRUE),
     rate_applied = dplyr::if_else(
       is.na(discard_rate),
-      dplyr::if_else(species == "stripetail rockfish", 0.45, 0.22),
+      dplyr::if_else(
+        species == "stripetail rockfish",
+        0.45,
+        dplyr::if_else(species == "pacific sanddab", 0.22, 0.01)
+      ), # bank rockfish 0.01
       discard_rate
     ),
     discard_mt = round(
