@@ -3,16 +3,56 @@
 # 2. pulls in historical reconstructions (or catch from the 2013 assessments)
 # 3. brings in the GEMM discard rates to calculated catch for pacfin and historical
 # years.
-
 drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3"
 
+# To Do:
+# 1. Get California historical catches for 1979:1980: all species
+# 2. Get California historical catches for 1916:196: Pacific sanddab
+# 3. Decide what to do before 1916 in CA for sanddab in particular
+# 4. Figure out if mink is included anywhere and add it from the 2013 assessment if needed.
+#    The 2013 assessment has coastwide mink catch.
+
 # Historical catch reconstructions
+ca_comm_recon_data <- readr::read_rds(
+  file = file.path(
+    drive,
+    "Catch reconstructions",
+    "CA_commercial",
+    "ca_comm_recon_data.rds"
+  )
+) |>
+  dplyr::filter(species %in% c("STRK", "BANK")) |>
+  dplyr::mutate(
+    species = dplyr::recode_values(
+      species,
+      "STRK" ~ "stripetail rockfish",
+      "BANK" ~ "bank rockfish"
+    )
+  )
 WA_rf_ct_recon <- read.csv(here::here(
   drive,
   "Catch reconstructions",
   "WA rockfish catch reconstruction",
   "SpeciesSumOutput2_2017.csv"
-))
+)) |>
+  dplyr::filter(
+    SPID %in% c("BANK", "RSTN", "SRKR", "STAR", "STRK", "SLGR", "YMTH"),
+    CompositionType != "Existing PacFIN"
+  ) |>
+  dplyr::rename_all(tolower) |>
+  dplyr::mutate(
+    species = dplyr::recode_values(
+      spid,
+      "BANK" ~ "bank rockfish",
+      "RSTN" ~ "rosethorn rockfish",
+      "SRKR" ~ "shortraker rockfish",
+      "STAR" ~ "starry rockfish",
+      "STRK" ~ "stripetail rockfish",
+      "SLGR" ~ "silvergrey rockfish",
+      "YMTH" ~ "yellowmouth rockfish"
+    )
+  ) |>
+  dplyr::filter(species %in% c("stripetail rockfish", "bank rockfish"))
 
 OR_recon <- readxl::read_excel(
   path = here::here(
@@ -26,7 +66,10 @@ OR_recon <- readxl::read_excel(
   dplyr::filter(
     SPECIES_NAME %in%
       c("Stripetail Rockfish", "Pacific Sanddab", "Bank Rockfish")
-  )
+  ) |>
+  dplyr::rename_with(tolower) |>
+  dplyr::rename(species = species_name) |>
+  dplyr::mutate(species = tolower(species))
 
 OR_urock <- read.csv(
   here::here(
@@ -36,7 +79,10 @@ OR_urock <- read.csv(
     "Speciated_URCK_POP1_Tickets.csv"
   )
 ) |>
-  dplyr::filter(COMMON_NAM %in% c("STRIPETAIL ROCKFISH", "BANK ROCKFISH"))
+  dplyr::filter(COMMON_NAM %in% c("STRIPETAIL ROCKFISH", "BANK ROCKFISH")) |>
+  dplyr::rename_with(tolower) |>
+  dplyr::rename(species = common_nam) |>
+  dplyr::mutate(species = tolower(species))
 
 # 2013 Assessment historical catch
 historical_catch_sanddab_raw <- read.csv(here::here(
@@ -103,28 +149,7 @@ landings_sanddab_general <- catch.pacfin
 # State provided historical reconstructions
 #===============================================================================
 commercial_reconstruction_wa <- WA_rf_ct_recon |>
-  dplyr::filter(
-    SPID %in% c("BANK", "RSTN", "SRKR", "STAR", "STRK", "SLGR", "YMTH"),
-    CompositionType != "Existing PacFIN"
-  ) |>
-  dplyr::rename_all(tolower) |>
   dplyr::mutate(
-    species = dplyr::recode_values(
-      spid,
-      "BANK" ~ "bank rockfish",
-      "RSTN" ~ "rosethorn rockfish",
-      "SRKR" ~ "shortraker rockfish",
-      "STAR" ~ "starry rockfish",
-      "STRK" ~ "stripetail rockfish",
-      "SLGR" ~ "silvergrey rockfish",
-      "YMTH" ~ "yellowmouth rockfish"
-    ),
-    #gear_group = dplyr::recode_values(
-    #  geargroup,
-    #  "JIG" ~ "HKL",
-    #  "HKL" ~ "HKL",
-    #  "TWL" ~ "TWL"
-    #),
     species_metric_tons = 0.000453592 * speciespounds,
     source = "wa_rockfish_reconstruction",
     fleet = "commercial",
@@ -137,31 +162,28 @@ commercial_reconstruction_wa <- WA_rf_ct_recon |>
     discard_mt = 0
   ) |>
   dplyr::filter(
-    species %in% c("stripetail rockfish", "bank rockfish"),
     year < 1981
   )
 
 # cols needed: species, source, fleet, year, gear_group, landings_mt, discard_mt
 commercial_reconstruction_rockfish_or <- OR_urock |>
-  dplyr::mutate(
-    species = tolower(COMMON_NAM),
-    year = LANDING_YEAR
+  dplyr::rename(
+    year = landing_year
   ) |>
   dplyr::summarise(
     .by = c(species, year),
     source = "or_urock_reconstruction",
     fleet = "commercial",
     state = "oregon",
-    landings_mt = 0.000453592 * round(sum(Species.lbs), 4),
+    landings_mt = 0.000453592 * round(sum(species.lbs), 4),
     discard_mt = 0
   )
 
 commercial_reconstruction_species_specific_or <- OR_recon |>
   dplyr::mutate(
-    species = tolower(SPECIES_NAME),
-    year = as.numeric(YEAR),
+    year = as.numeric(year),
     fleet = dplyr::if_else(
-      MKT_CAT_NAME == "Mink Food" & species %in% c("pacific sanddab"),
+      mkt_cat_name == "Mink Food" & species %in% c("pacific sanddab"),
       "mink fishery",
       "commercial"
     )
@@ -170,20 +192,35 @@ commercial_reconstruction_species_specific_or <- OR_recon |>
     .by = c(species, year, fleet),
     source = "or_reconstruction",
     state = "oregon",
-    landings_mt = round(sum(ROUND_MTONS), 4),
+    landings_mt = round(sum(round_mtons), 4),
     discard_mt = 0
   ) |>
   as.data.frame()
 
+commercial_reconstruction_ca <- ca_comm_recon_data |>
+  dplyr::summarise(
+    .by = c(species, year),
+    source = "ca_reconstruction",
+    state = "california",
+    landings_mt = round(sum(catch_mt, na.rm = TRUE), 4),
+    discard_mt = 0
+  ) |>
+  as.data.frame()
+
+
 commercial_reconstructions <- dplyr::bind_rows(
   commercial_reconstruction_wa,
   commercial_reconstruction_rockfish_or,
-  commercial_reconstruction_species_specific_or
+  commercial_reconstruction_species_specific_or,
+  commercial_reconstruction_ca
 )
 
-#ggplot2::ggplot(commercial_reconstructions, ggplot2::aes(x = year, y = landings_mt, fill = state)) +
-#  ggplot2::geom_bar(stat = "identity") +
-#  ggplot2::facet_grid("species", scales = "free_y")
+ggplot2::ggplot(
+  commercial_reconstructions,
+  ggplot2::aes(x = year, y = landings_mt, fill = state)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
 
 #===============================================================================
 # PacFIN landings
@@ -299,6 +336,21 @@ ggplot2::ggplot(
   commercial_mortality_by_source,
   ggplot2::aes(x = year, y = landings_mt, fill = state)
 ) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  historical_assessment_catch,
+  ggplot2::aes(x = year, y = catch_mt, fill = state)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  commercial_mortality_by_source |> dplyr::filter(species != "bank rockfish"),
+  ggplot2::aes(x = year, y = landings_mt, fill = source)
+) +
+  ggplot2::xlim(c(1888, 1980)) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::facet_grid("species", scales = "free_y")
 

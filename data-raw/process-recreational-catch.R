@@ -16,6 +16,12 @@ rec_catch_raw <- read.csv(here::here(
 ))
 # available years by state in CTE051:
 # WA: 1990+, OR: 2001+, CA:2005+
+rec_catch_raw_bank <- read.csv(here::here(
+  drive,
+  "Bank Rockfish",
+  "recfin",
+  "CTE051-WASHINGTON-OREGON-CALIFORNIA-1990---2025.csv"
+))
 
 # MRFSS 1980-2003
 mrfss_catch_raw <- read.csv(here::here(
