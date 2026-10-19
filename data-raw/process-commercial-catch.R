@@ -21,12 +21,13 @@ ca_comm_recon_data <- readr::read_rds(
     "ca_comm_recon_data.rds"
   )
 ) |>
-  dplyr::filter(species %in% c("STRK", "BANK")) |>
+  dplyr::filter(species %in% c("STRK", "BANK", "SDAB")) |>
   dplyr::mutate(
     species = dplyr::recode_values(
       species,
       "STRK" ~ "stripetail rockfish",
-      "BANK" ~ "bank rockfish"
+      "BANK" ~ "bank rockfish",
+      "SDAB" ~ "pacific sanddab"
     )
   )
 WA_rf_ct_recon <- read.csv(here::here(
@@ -212,7 +213,13 @@ commercial_reconstructions <- dplyr::bind_rows(
   commercial_reconstruction_wa,
   commercial_reconstruction_rockfish_or,
   commercial_reconstruction_species_specific_or,
-  commercial_reconstruction_ca
+  commercial_reconstruction_ca,
+  historical_catch_sanddab_raw |>
+    dplyr::filter(year < 1931, state == "california", fleet == "commercial") |>
+    dplyr::rename(
+      landings_mt = catch_mt
+    ) |>
+    dplyr::mutate(discard_mt = 0)
 )
 
 ggplot2::ggplot(
