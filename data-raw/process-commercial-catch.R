@@ -6,10 +6,8 @@
 drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3"
 
 # To Do:
-# 1. Get California historical catches for 1979:1980: all species
-# 2. Get California historical catches for 1916:196: Pacific sanddab
-# 3. Decide what to do before 1916 in CA for sanddab in particular
-# 4. Figure out if mink is included anywhere and add it from the 2013 assessment if needed.
+# 1. Get California historical catches for 1968:1980: all species
+# 2. Figure out if mink is included anywhere and add it from the 2013 assessment if needed.
 #    The 2013 assessment has coastwide mink catch.
 
 # Historical catch reconstructions
