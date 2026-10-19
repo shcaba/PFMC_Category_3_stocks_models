@@ -5,9 +5,9 @@ processed_final_catches <- dplyr::bind_rows(
 ) |>
   dplyr::summarise(
     .by = c(species, year),
-    landings_mt = sum(landings_mt),
-    discard_mt = sum(discard_mt),
-    catch_mt = sum(catch_mt)
+    landings_mt = sum(landings_mt, na.rm = TRUE),
+    discard_mt = sum(discard_mt, na.rm = TRUE),
+    catch_mt = sum(catch_mt, na.rm = TRUE)
   )
 
 # format for stock synthesis
