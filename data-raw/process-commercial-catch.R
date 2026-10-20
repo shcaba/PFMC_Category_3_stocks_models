@@ -7,8 +7,10 @@ drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (con
 
 # To Do:
 # 1. Get California historical catches for 1968:1980: all species
-# 2. Figure out if mink is included anywhere and add it from the 2013 assessment if needed.
-#    The 2013 assessment has coastwide mink catch.
+# Note:
+# 1. For pacific sanddab, the mink fishery catches are pulled straight from the
+#    2013 assessment. The only reconstruction that we have (10/20) that included
+#    the mink fishery was OR. These OR removals were filtered out below.
 
 # Historical catch reconstructions
 ca_comm_recon_data <- readr::read_rds(
@@ -179,13 +181,12 @@ commercial_reconstruction_rockfish_or <- OR_urock |>
   )
 
 commercial_reconstruction_species_specific_or <- OR_recon |>
+  dplyr::filter(
+    mkt_cat_name != "Mink Food" & species %in% c("pacific sanddab")
+  ) |>
   dplyr::mutate(
     year = as.numeric(year),
-    fleet = dplyr::if_else(
-      mkt_cat_name == "Mink Food" & species %in% c("pacific sanddab"),
-      "mink fishery",
-      "commercial"
-    )
+    fleet = "commercial"
   ) |>
   dplyr::summarise(
     .by = c(species, year, fleet),
@@ -215,6 +216,13 @@ commercial_reconstructions <- dplyr::bind_rows(
   historical_catch_sanddab_raw |>
     dplyr::filter(year < 1931, state == "california", fleet == "commercial") |>
     dplyr::rename(
+      landings_mt = catch_mt
+    ) |>
+    dplyr::mutate(discard_mt = 0),
+  historical_catch_sanddab_raw |>
+    dplyr::filter(fleet == "mink") |>
+    dplyr::mutate(
+      state = "coastwide",
       landings_mt = catch_mt
     ) |>
     dplyr::mutate(discard_mt = 0)
@@ -364,6 +372,7 @@ ggplot2::ggplot(
 # Format removals for used to composition expansions
 #===============================================================================
 landings_by_state_for_expansion <- commercial_mortality_by_source |>
+  dplyr::filter(state != "coastwide") |>
   dplyr::summarise(
     .by = c(species, state, year),
     landings_mt = round(sum(landings_mt), 4)
@@ -388,14 +397,22 @@ commercial_catch <- dplyr::left_join(
     dplyr::select(species, year, discard_rate, gemm_mortality),
   by = c("species", "year")
 ) |>
+  dplyr::filter(year < 2026) |>
+  dplyr::group_by(species) |>
   dplyr::mutate(
+    average_discard_rate = mean(discard_rate, na.rm = TRUE),
     # 2002 in CA includes both sanddab and urock-apply the GEMM discard rate
     # ends up with > 2200 mt in discards for this year which seem unrealistic
     # apply lower rate to all states
     discard_rate = dplyr::if_else(
       year == 2002 & species == "pacific sanddab",
       0.22,
-      discard_rate
+      # Don't apply addition discard mortality to the mink fishery
+      dplyr::if_else(
+        state == "coastwide" & species == "pacific sanddab",
+        0,
+        discard_rate
+      )
     ),
     # landings for stripetail are unusually high in 1994, assume that discard
     # was different for this reason for unknown reasons
@@ -403,12 +420,7 @@ commercial_catch <- dplyr::left_join(
       year == 1994 & species == "stripetail rockfish",
       0.10,
       discard_rate
-    )
-  ) |>
-  dplyr::filter(year < 2026) |>
-  dplyr::group_by(species) |>
-  dplyr::mutate(
-    average_discard_rate = mean(discard_rate, na.rm = TRUE),
+    ),
     rate_applied = dplyr::if_else(
       is.na(discard_rate),
       dplyr::if_else(
