@@ -30,6 +30,50 @@ ca_comm_recon_data <- readr::read_rds(
       "SDAB" ~ "pacific sanddab"
     )
   )
+load(
+  file = file.path(
+    drive,
+    "Catch reconstructions",
+    "CA_commercial",
+    "CA_Recon_comm_data_69_77.rds"
+  )
+)
+ca_comm_recon_data_69 <- CA_Recon_comm_data_69_77 |>
+  dplyr::filter(Species %in% c("STRK", "BANK", "UDAB")) |>
+  dplyr::mutate(
+    year = Year,
+    species = dplyr::recode_values(
+      Species,
+      "STRK" ~ "stripetail rockfish",
+      "BANK" ~ "bank rockfish",
+      "UDAB" ~ "pacific sanddab"
+    ),
+    landings_mt = 0.000453592 * Pounds,
+    state = "california",
+    fleet = "commercial"
+  )
+load(
+  file = file.path(
+    drive,
+    "Catch reconstructions",
+    "CA_commercial",
+    "CA_Recon_comm_data_78_80.rds"
+  )
+)
+ca_comm_recon_data_79 <- CA_Recon_comm_data_78_80 |>
+  dplyr::filter(SPECIES %in% c("STRK", "BANK", "UDAB")) |>
+  dplyr::mutate(
+    year = YEAR,
+    species = dplyr::recode_values(
+      SPECIES,
+      "STRK" ~ "stripetail rockfish",
+      "BANK" ~ "bank rockfish",
+      "UDAB" ~ "pacific sanddab"
+    ),
+    landings_mt = 0.000453592 * POUNDS,
+    state = "california",
+    fleet = "commercial"
+  )
 WA_rf_ct_recon <- read.csv(here::here(
   drive,
   "Catch reconstructions",
@@ -207,12 +251,47 @@ commercial_reconstruction_ca <- ca_comm_recon_data |>
   ) |>
   as.data.frame()
 
+commercial_reconstruction_ca_69 <- ca_comm_recon_data_69 |>
+  dplyr::mutate(
+    landings_mt = dplyr::if_else(
+      species == "pacific sanddab",
+      0.98 * landings_mt,
+      landings_mt
+    )
+  ) |>
+  dplyr::summarise(
+    .by = c(species, year),
+    source = "ca_reconstruction",
+    state = "california",
+    landings_mt = round(sum(landings_mt, na.rm = TRUE), 4),
+    discard_mt = 0
+  ) |>
+  as.data.frame()
+commercial_reconstruction_ca_79 <- ca_comm_recon_data_79 |>
+  dplyr::mutate(
+    landings_mt = dplyr::if_else(
+      species == "pacific sanddab",
+      0.98 * landings_mt,
+      landings_mt
+    )
+  ) |>
+  dplyr::summarise(
+    .by = c(species, year),
+    source = "ca_reconstruction",
+    state = "california",
+    landings_mt = round(sum(landings_mt, na.rm = TRUE), 4),
+    discard_mt = 0
+  ) |>
+  as.data.frame()
+
 
 commercial_reconstructions <- dplyr::bind_rows(
   commercial_reconstruction_wa,
   commercial_reconstruction_rockfish_or,
   commercial_reconstruction_species_specific_or,
   commercial_reconstruction_ca,
+  commercial_reconstruction_ca_69,
+  commercial_reconstruction_ca_79,
   historical_catch_sanddab_raw |>
     dplyr::filter(year < 1931, state == "california", fleet == "commercial") |>
     dplyr::rename(

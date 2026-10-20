@@ -68,6 +68,14 @@ ca_rec_hist_raw <- read.csv(here::here(
 #   "ca_rec_recon_rockfish.rds"
 # ))
 
+historical_catch_sanddab_raw <- read.csv(here::here(
+  drive,
+  "Pacific Sanddab",
+  "historical_data",
+  "pacific_sanddab_historical_catches_2013_assessment.csv"
+)) |>
+  dplyr::filter(state == "coastwide", fleet == "recreational", year < 1980)
+
 # Read in bio samples in order to fill in missing weights for the catch
 rec_bio_raw <- dplyr::bind_rows(
   read.csv(here::here(
@@ -309,7 +317,10 @@ recreational_catch <- dplyr::bind_rows(
   ca_ave_catch_1990,
   ca_ave_catch_1991,
   ca_ave_catch_1992,
-  ca_rec_hist_raw
+  ca_rec_hist,
+  historical_catch_sanddab_raw |>
+    dplyr::rename(landings_mt = catch_mt) |>
+    dplyr::mutate(discard_mt = 0)
 ) |>
   dplyr::filter(!is.na(species)) |>
   dplyr::summarise(
