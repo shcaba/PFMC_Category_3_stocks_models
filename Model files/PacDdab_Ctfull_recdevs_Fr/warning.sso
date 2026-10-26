@@ -1,0 +1,13 @@
+Note 1 Information: Max data length bin: 40  < max pop len bins: 46; so will accumulate larger pop len bins
+Warning 1 Adjustment: basis for HCR anchor was not set; setting to 2 to match default before 3.30.24
+Warning 2 : depletion_basis is using virgin but HCR anchor is using SSB_unf from benchmark. Are you sure?
+Warning 3 : First_Mature_Age read as:  0, which is unusual. Check logic of spawn_month and settlement time & age
+Warning 4 : Fleet:_1min bound on parameter for size at peak is 8; should be >= midsize bin 2 (11)
+Warning 5 : Fleet:_2min bound on parameter for size at peak is 8; should be >= midsize bin 2 (11)
+Warning 6 : parameter init value is less than parameter min -5.06875 < -2 for parm: 10; search for <now check> in echoinput.sso for parm_type
+Warning 7 : Setting in starter does not request all priors, and 3 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 8 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 9 : Final gradient: 0.00012962 is larger than final_conv: 0.0001
+Warning 10 : Fmsy/mey is >3x of Fspr are you sure?  check for convergence 
+Note 2 Information: A revised protocol for the Fcast_yr specification is available and recommended.
+ 10 warnings  and 2 notes 
