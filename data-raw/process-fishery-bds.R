@@ -46,7 +46,8 @@ bds_clean_sanddab <- pacfintools::cleanPacFIN(
 
 bds_clean_bank <- pacfintools::cleanPacFIN(
   Pdata = bds_raw_bank
-)
+) |>
+  dplyr::mutate(fleet = "ALL")
 # 50448 records: CA 48212, OR 1988, WA 248
 # SEX F: 19512, M: 17205, U: 13731
 # data start in 1977 in CA (1977: n = 64, 1978: n= 185, 1979: n= 26, 1980: n=28)
@@ -237,7 +238,7 @@ expanded_comps <- pacfintools::get_pacfin_expansions(
   Pdata = bds_clean_stripetail |>
     # temporarily removing records before 1981 (all in CA) because we don't have
     # CA historical catches yet (1977 = 21, 1978 = 131, 1979 = 139, 1980 = 53)
-    dplyr::filter(year >= 1981) |>
+    #dplyr::filter(year >= 1981) |>
     dplyr::mutate(stratification = AGENCY_CODE),
   Catch = formatted_catch_stripetail,
   weight_length_estimates = weight_length_estimates |>
@@ -392,7 +393,7 @@ expanded_comps <- pacfintools::get_pacfin_expansions(
     dplyr::mutate(stratification = AGENCY_CODE),
   Catch = formatted_catch_sanddab,
   weight_length_estimates = weight_length_estimates |>
-    dplyr::filter(species == "pacific sanddab"),
+    dplyr::filter(species == "Pacific sanddab"),
   Units = "MT",
   maxExp = 0.90,
   Exp_WA = TRUE,
@@ -491,6 +492,7 @@ retained_lengths_sanddab_by_sex <- dplyr::bind_rows(
       ~new_col_names
     )
 ) |>
+  dplyr::mutate(partition = 0)
 new_col_names <- c(
   "year",
   "month",
@@ -534,6 +536,7 @@ discard_comp_stripetail <-
     drive,
     "Stripetail Rockfish",
     "wcgop",
+    "recommended",
     "wcgop_discard_lengths.csv"
   )) |>
   dplyr::mutate(
@@ -545,6 +548,7 @@ discard_comp_sanddab <-
     drive,
     "Pacific Sanddab",
     "wcgop",
+    "recommended",
     "wcgop_discard_lengths.csv"
   )) |>
   dplyr::mutate(
