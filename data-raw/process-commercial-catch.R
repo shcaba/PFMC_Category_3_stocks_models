@@ -5,9 +5,7 @@
 # years.
 drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3"
 
-# To Do:
-# 1. Get California historical catches for 1968:1980: all species
-# Note:
+# Notes:
 # 1. For pacific sanddab, the mink fishery catches are pulled straight from the
 #    2013 assessment. The only reconstruction that we have (10/20) that included
 #    the mink fishery was OR. These OR removals were filtered out below.
@@ -198,10 +196,15 @@ commercial_reconstruction_wa <- WA_rf_ct_recon |>
     species_metric_tons = 0.000453592 * speciespounds,
     source = "wa_rockfish_reconstruction",
     fleet = "commercial",
-    state = "washington"
+    state = "washington",
+    gear = dplyr::if_else(
+      geargroup == "TWL",
+      "TWL",
+      "FG"
+    )
   ) |>
   dplyr::summarise(
-    .by = c(species, source, fleet, year),
+    .by = c(species, source, gear, fleet, year),
     state = "washington",
     landings_mt = round(sum(species_metric_tons, na.rm = TRUE), 4),
     discard_mt = 0
@@ -220,6 +223,7 @@ commercial_reconstruction_rockfish_or <- OR_urock |>
     source = "or_urock_reconstruction",
     fleet = "commercial",
     state = "oregon",
+    gear = "TWL",
     landings_mt = 0.000453592 * round(sum(species.lbs), 4),
     discard_mt = 0
   )
@@ -230,10 +234,15 @@ commercial_reconstruction_species_specific_or <- OR_recon |>
   ) |>
   dplyr::mutate(
     year = as.numeric(year),
-    fleet = "commercial"
+    fleet = "commercial",
+    gear = dplyr::if_else(
+      gear_code %in% c(390, 360, 380, 370, 330),
+      "TWL",
+      "FG"
+    )
   ) |>
   dplyr::summarise(
-    .by = c(species, year, fleet),
+    .by = c(species, gear, year, fleet),
     source = "or_reconstruction",
     state = "oregon",
     landings_mt = round(sum(round_mtons), 4),
@@ -242,8 +251,11 @@ commercial_reconstruction_species_specific_or <- OR_recon |>
   as.data.frame()
 
 commercial_reconstruction_ca <- ca_comm_recon_data |>
+  dplyr::mutate(
+    gear = dplyr::if_else(gear %in% c("ALL", "TWL", "UNK"), "TWL", "FG")
+  ) |>
   dplyr::summarise(
-    .by = c(species, year),
+    .by = c(species, gear, year),
     source = "ca_reconstruction",
     state = "california",
     landings_mt = round(sum(catch_mt, na.rm = TRUE), 4),
@@ -257,10 +269,15 @@ commercial_reconstruction_ca_69 <- ca_comm_recon_data_69 |>
       species == "pacific sanddab",
       0.98 * landings_mt,
       landings_mt
+    ),
+    gear = dplyr::if_else(
+      Gear %in% c("TWL"),
+      "TWL",
+      "FG"
     )
   ) |>
   dplyr::summarise(
-    .by = c(species, year),
+    .by = c(species, gear, year),
     source = "ca_reconstruction",
     state = "california",
     landings_mt = round(sum(landings_mt, na.rm = TRUE), 4),
@@ -273,10 +290,15 @@ commercial_reconstruction_ca_79 <- ca_comm_recon_data_79 |>
       species == "pacific sanddab",
       0.98 * landings_mt,
       landings_mt
+    ),
+    gear = dplyr::if_else(
+      GEAR_GRP == "TWL",
+      "TWL",
+      "FG"
     )
   ) |>
   dplyr::summarise(
-    .by = c(species, year),
+    .by = c(species, gear, year),
     source = "ca_reconstruction",
     state = "california",
     landings_mt = round(sum(landings_mt, na.rm = TRUE), 4),
@@ -297,12 +319,13 @@ commercial_reconstructions <- dplyr::bind_rows(
     dplyr::rename(
       landings_mt = catch_mt
     ) |>
-    dplyr::mutate(discard_mt = 0),
+    dplyr::mutate(discard_mt = 0, gear = "TWL"),
   historical_catch_sanddab_raw |>
     dplyr::filter(fleet == "mink") |>
     dplyr::mutate(
       state = "coastwide",
-      landings_mt = catch_mt
+      landings_mt = catch_mt,
+      gear = "TWL"
     ) |>
     dplyr::mutate(discard_mt = 0)
 )
@@ -310,6 +333,13 @@ commercial_reconstructions <- dplyr::bind_rows(
 ggplot2::ggplot(
   commercial_reconstructions,
   ggplot2::aes(x = year, y = landings_mt, fill = state)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  commercial_reconstructions,
+  ggplot2::aes(x = year, y = landings_mt, fill = gear)
 ) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::facet_grid("species", scales = "free_y")
@@ -354,11 +384,16 @@ pacfin_landings_by_state <- dplyr::bind_rows(
       "california",
       dplyr::if_else(agency_code == "O", "oregon", "washington")
     ),
+    gear = dplyr::if_else(
+      pacfin_group_gear_code %in% c("TWL", "MSC", "TWS"),
+      "TWL",
+      "FG"
+    ),
     fleet = "commercial",
     source = "pacfin"
   ) |>
   dplyr::summarise(
-    .by = c(species, source, fleet, state, year),
+    .by = c(species, source, fleet, gear, state, year),
     landings_mt = round(sum(landings_mt), 4),
     discard_mt = 0
   )
@@ -385,6 +420,7 @@ historical_catch_sanddab <- historical_catch_sanddab_raw |>
   ) |>
   dplyr::summarise(
     .by = c(species, source, state, fleet, year),
+    gear = "TWL",
     landings_mt = 0,
     catch_mt = sum(catch_mt)
   )
@@ -395,6 +431,7 @@ historical_catch_stripetail <- historical_catch_stripetail_raw |>
   ) |>
   dplyr::summarise(
     .by = c(species, source, state, fleet, year),
+    gear = "TWL",
     landings_mt = 0,
     catch_mt = sum(catch_mt)
   )
@@ -412,7 +449,7 @@ commercial_mortality_by_source <- dplyr::bind_rows(
   commercial_reconstructions
 ) |>
   dplyr::summarise(
-    .by = c(species, source, state, fleet, year),
+    .by = c(species, source, gear, state, fleet, year),
     landings_mt = sum(landings_mt),
     discard_mt = sum(discard_mt)
   )
@@ -427,6 +464,13 @@ ggplot2::ggplot(
 ggplot2::ggplot(
   commercial_mortality_by_source,
   ggplot2::aes(x = year, y = landings_mt, fill = state)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  commercial_mortality_by_source,
+  ggplot2::aes(x = year, y = landings_mt, fill = gear)
 ) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::facet_grid("species", scales = "free_y")
@@ -452,8 +496,15 @@ ggplot2::ggplot(
 #===============================================================================
 landings_by_state_for_expansion <- commercial_mortality_by_source |>
   dplyr::filter(state != "coastwide") |>
+  dplyr::mutate(
+    gear = dplyr::if_else(
+      species != "bank rockfish",
+      "ALL",
+      gear
+    )
+  ) |>
   dplyr::summarise(
-    .by = c(species, state, year),
+    .by = c(species, state, gear, year),
     landings_mt = round(sum(landings_mt), 4)
   ) |>
   dplyr::arrange(species, state, year)
@@ -467,7 +518,14 @@ usethis::use_data(
 # Add discard mortality to get to catch
 #===============================================================================
 commercial_catch <- dplyr::left_join(
-  x = commercial_mortality_by_source,
+  x = commercial_mortality_by_source |>
+    dplyr::mutate(
+      gear = dplyr::if_else(
+        species != "bank rockfish",
+        "ALL",
+        gear
+      )
+    ),
   y = commercial_discard_rates |>
     dplyr::group_by(species, year) |>
     dplyr::mutate(
@@ -517,7 +575,7 @@ commercial_catch <- dplyr::left_join(
   ) |>
   dplyr::ungroup() |>
   dplyr::summarise(
-    .by = c(species, year),
+    .by = c(species, gear, year),
     landings_mt = sum(landings_mt),
     discard_mt = sum(discard_mt),
     catch_mt = sum(catch_mt)
@@ -552,6 +610,27 @@ cowplot::plot_grid(
   plot_3,
   nrow = 3
 )
+
+ggplot2::ggplot(
+  commercial_catch,
+  ggplot2::aes(x = year, y = catch_mt, fill = gear)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  historical_assessment_catch,
+  ggplot2::aes(x = year, y = catch_mt, fill = state)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
+
+ggplot2::ggplot(
+  commercial_catch |> dplyr::filter(species != "bank rockfish", year < 1981),
+  ggplot2::aes(x = year, y = catch_mt)
+) +
+  ggplot2::geom_bar(stat = "identity") +
+  ggplot2::facet_grid("species", scales = "free_y")
 #===============================================================================
 # Save output
 #===============================================================================

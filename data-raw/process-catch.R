@@ -1,10 +1,18 @@
 processed_final_catches <- dplyr::bind_rows(
   commercial_catch,
   recreational_catch |>
+    dplyr::mutate(gear = "REC") |>
     dplyr::select(-source, -fleet)
 ) |>
+  dplyr::mutate(
+    gear = dplyr::if_else(
+      species != "bank rockfish",
+      "ALL",
+      gear
+    ),
+  ) |>
   dplyr::summarise(
-    .by = c(species, year),
+    .by = c(species, gear, year),
     landings_mt = sum(landings_mt, na.rm = TRUE),
     discard_mt = sum(discard_mt, na.rm = TRUE),
     catch_mt = sum(catch_mt, na.rm = TRUE)
@@ -13,14 +21,18 @@ processed_final_catches <- dplyr::bind_rows(
 # format for stock synthesis
 catches_ss3_formatted <- dplyr::bind_rows(
   processed_final_catches |>
-    dplyr::select(species, year, landings_mt) |>
+    dplyr::select(species, year, gear, landings_mt) |>
     dplyr::mutate(
       season = 1,
-      fleet = "landings-fleet",
+      fleet = paste0("landings-", gear),
       catch_se = 0.01
     ) |>
     dplyr::rename(catch = landings_mt),
   processed_final_catches |>
+    dplyr::summarise(
+      .by = c(species, year),
+      discard_mt = sum(discard_mt)
+    ) |>
     dplyr::select(species, year, discard_mt) |>
     dplyr::mutate(
       season = 1,
