@@ -41,6 +41,7 @@ catches_ss3_formatted <- dplyr::bind_rows(
     ) |>
     dplyr::rename(catch = discard_mt)
 ) |>
+  dplyr::select(-gear) |>
   dplyr::relocate(catch, .before = catch_se) |>
   dplyr::arrange(species)
 
