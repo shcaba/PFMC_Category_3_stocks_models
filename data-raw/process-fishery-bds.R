@@ -168,8 +168,7 @@ retained_lengths_bank_by_sex <- dplyr::bind_rows(
   ) |>
     dplyr::mutate(
       month = 7,
-      sex = 1,
-      fleet = "landed-comps"
+      sex = 1
     ) |>
     dplyr::rename_with(
       ~new_col_names
