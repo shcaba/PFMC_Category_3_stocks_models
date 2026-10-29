@@ -32,6 +32,7 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
+    TropFishR,
     utils,
     usethis,
     viridis
