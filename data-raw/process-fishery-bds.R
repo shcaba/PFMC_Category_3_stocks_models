@@ -47,7 +47,13 @@ bds_clean_sanddab <- pacfintools::cleanPacFIN(
 bds_clean_bank <- pacfintools::cleanPacFIN(
   Pdata = bds_raw_bank
 ) |>
-  dplyr::mutate(fleet = "ALL")
+  dplyr::mutate(
+    fleet = dplyr::if_else(
+      geargroup %in% c("TWL", "TWS"),
+      "TWL",
+      "FG"
+    )
+  )
 # 50448 records: CA 48212, OR 1988, WA 248
 # SEX F: 19512, M: 17205, U: 13731
 # data start in 1977 in CA (1977: n = 64, 1978: n= 185, 1979: n= 26, 1980: n=28)
@@ -66,21 +72,24 @@ length_bins <- seq(12, 50, 2)
 formatted_catch_bank <- pacfintools::formatCatch(
   catch = landings |>
     dplyr::filter(species == "bank rockfish"),
-  strat = c("state"),
+  strat = c("state", "gear"),
   valuename = "landings_mt"
 ) |>
   # there are no species-specific landings in 2004-W, 2015-W, 2017-W, 2024-W
   dplyr::mutate(
-    W = dplyr::if_else(year %in% c(2004, 2015, 2017, 2024), 0.01, W)
+    W.FG = dplyr::if_else(
+      year %in% c(2004, 2014, 2015, 2017, 2020, 2024, 2025),
+      0.01,
+      W.FG
+    ),
+    W.TWL = dplyr::if_else(year %in% c(2015, 2021), 0.01, W.TWL),
+    O.FG = dplyr::if_else(year %in% c(2018, 2025), 0.01, O.FG)
   ) |>
   dplyr::arrange(year)
 
 expanded_comps <- pacfintools::get_pacfin_expansions(
   Pdata = bds_clean_bank |>
-    # temporarily removing records before 1981 (all in CA) because we don't have
-    # CA historical catches yet
-    dplyr::filter(year >= 1981) |>
-    dplyr::mutate(stratification = AGENCY_CODE),
+    dplyr::mutate(stratification = paste0(AGENCY_CODE, ".", fleet)),
   Catch = formatted_catch_bank,
   weight_length_estimates = weight_length_estimates |>
     dplyr::filter(species == "bank rockfish"),
@@ -105,7 +114,6 @@ retained_lengths_bank <- pacfintools::writeComps(
 ) |>
   dplyr::mutate(
     month = 7,
-    fleet = "landed-comps",
     partition = 0
   )
 
@@ -147,8 +155,7 @@ retained_lengths_bank_by_sex <- dplyr::bind_rows(
   ) |>
     dplyr::mutate(
       month = 7,
-      sex = 0,
-      fleet = "landed-comps"
+      sex = 0
     ) |>
     dplyr::rename_with(
       ~new_col_names
@@ -175,8 +182,7 @@ retained_lengths_bank_by_sex <- dplyr::bind_rows(
   ) |>
     dplyr::mutate(
       month = 7,
-      sex = 2,
-      fleet = "landed-comps"
+      sex = 2
     ) |>
     dplyr::rename_with(
       ~new_col_names
@@ -213,10 +219,7 @@ length_trips_samples_bank <- length_comps_long |>
     samples = sum(unique(n_fish)),
     input_n = sum(unique(n_stewart))
   ) |>
-  dplyr::rename(year = fishyr) |>
-  dplyr::mutate(
-    fleet = "landed-comps"
-  )
+  dplyr::rename(year = fishyr)
 
 # Stripetail rockfish ==========================================================
 length_bins <- seq(6, 36, 2)
