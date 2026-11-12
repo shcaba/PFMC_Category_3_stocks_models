@@ -19,13 +19,14 @@ ca_comm_recon_data <- readr::read_rds(
     "ca_comm_recon_data.rds"
   )
 ) |>
-  dplyr::filter(species %in% c("STRK", "BANK", "SDAB")) |>
+  dplyr::filter(species %in% c("STRK", "BANK", "SDAB", "YMTH")) |>
   dplyr::mutate(
     species = dplyr::recode_values(
       species,
       "STRK" ~ "stripetail rockfish",
       "BANK" ~ "bank rockfish",
-      "SDAB" ~ "pacific sanddab"
+      "SDAB" ~ "pacific sanddab",
+      "YMTH" ~ "yellowmouth rockfish"
     )
   )
 load(
@@ -37,14 +38,15 @@ load(
   )
 )
 ca_comm_recon_data_69 <- CA_Recon_comm_data_69_77 |>
-  dplyr::filter(Species %in% c("STRK", "BANK", "UDAB")) |>
+  dplyr::filter(Species %in% c("STRK", "BANK", "UDAB", "YMTH")) |>
   dplyr::mutate(
     year = Year,
     species = dplyr::recode_values(
       Species,
       "STRK" ~ "stripetail rockfish",
       "BANK" ~ "bank rockfish",
-      "UDAB" ~ "pacific sanddab"
+      "UDAB" ~ "pacific sanddab",
+      "YMTH" ~ "yellowmouth rockfish"
     ),
     landings_mt = 0.000453592 * Pounds,
     state = "california",
@@ -59,14 +61,15 @@ load(
   )
 )
 ca_comm_recon_data_79 <- CA_Recon_comm_data_78_80 |>
-  dplyr::filter(SPECIES %in% c("STRK", "BANK", "UDAB")) |>
+  dplyr::filter(SPECIES %in% c("STRK", "BANK", "UDAB", "YMTH")) |>
   dplyr::mutate(
     year = YEAR,
     species = dplyr::recode_values(
       SPECIES,
       "STRK" ~ "stripetail rockfish",
       "BANK" ~ "bank rockfish",
-      "UDAB" ~ "pacific sanddab"
+      "UDAB" ~ "pacific sanddab",
+      "YMTH" ~ "yellowmouth rockfish"
     ),
     landings_mt = 0.000453592 * POUNDS,
     state = "california",
@@ -95,7 +98,10 @@ WA_rf_ct_recon <- read.csv(here::here(
       "YMTH" ~ "yellowmouth rockfish"
     )
   ) |>
-  dplyr::filter(species %in% c("stripetail rockfish", "bank rockfish"))
+  dplyr::filter(
+    species %in%
+      c("stripetail rockfish", "bank rockfish", "yellowmouth rockfish")
+  )
 
 OR_recon <- readxl::read_excel(
   path = here::here(
@@ -108,7 +114,12 @@ OR_recon <- readxl::read_excel(
 ) |>
   dplyr::filter(
     SPECIES_NAME %in%
-      c("Stripetail Rockfish", "Pacific Sanddab", "Bank Rockfish")
+      c(
+        "Stripetail Rockfish",
+        "Pacific Sanddab",
+        "Bank Rockfish",
+        "Yellowmouth Rockfish"
+      )
   ) |>
   dplyr::rename_with(tolower) |>
   dplyr::rename(species = species_name) |>
@@ -122,7 +133,10 @@ OR_urock <- read.csv(
     "Speciated_URCK_POP1_Tickets.csv"
   )
 ) |>
-  dplyr::filter(COMMON_NAM %in% c("STRIPETAIL ROCKFISH", "BANK ROCKFISH")) |>
+  dplyr::filter(
+    COMMON_NAM %in%
+      c("STRIPETAIL ROCKFISH", "BANK ROCKFISH", "YELLOWMOUTH ROCKFISH")
+  ) |>
   dplyr::rename_with(tolower) |>
   dplyr::rename(species = common_nam) |>
   dplyr::mutate(species = tolower(species))
@@ -142,6 +156,14 @@ historical_catch_stripetail_raw <- read.csv(here::here(
 ))
 
 # PacFIN data
+load(here::here(
+  drive,
+  "Yellowmouth Rockfish",
+  "pacfin",
+  "PacFIN.YMTH.CompFT.25.Sep.2026.RData"
+))
+landings_yellowmouth <- catch.pacfin
+
 load(here::here(
   drive,
   "Bank Rockfish",
@@ -230,7 +252,7 @@ commercial_reconstruction_rockfish_or <- OR_urock |>
 
 commercial_reconstruction_species_specific_or <- OR_recon |>
   dplyr::filter(
-    mkt_cat_name != "Mink Food" & species %in% c("pacific sanddab")
+    !(mkt_cat_name == "Mink Food" & species == c("pacific sanddab"))
   ) |>
   dplyr::mutate(
     year = as.numeric(year),
@@ -328,7 +350,8 @@ commercial_reconstructions <- dplyr::bind_rows(
       gear = "TWL"
     ) |>
     dplyr::mutate(discard_mt = 0)
-)
+) |>
+  dplyr::mutate(fleet = "commercial")
 
 ggplot2::ggplot(
   commercial_reconstructions,
@@ -355,6 +378,7 @@ cols_to_keep <- c(
   "PACFIN_GROUP_GEAR_CODE"
 )
 pacfin_landings_by_state <- dplyr::bind_rows(
+  landings_yellowmouth[, cols_to_keep],
   landings_bank[, cols_to_keep],
   landings_stripetail[, cols_to_keep],
   landings_sanddab[, cols_to_keep],
@@ -538,6 +562,10 @@ commercial_catch <- dplyr::left_join(
   dplyr::group_by(species) |>
   dplyr::mutate(
     average_discard_rate = mean(discard_rate, na.rm = TRUE),
+    # yellowmouth: the discard rate is very variable pre-2011 ranging from
+    # 0.00-0.73. The average across all years is 0.125 versus pre-2011 0.32.
+    # Using the average across all years for now
+    #
     # 2002 in CA includes both sanddab and urock-apply the GEMM discard rate
     # ends up with > 2200 mt in discards for this year which seem unrealistic
     # apply lower rate to all states
@@ -558,14 +586,13 @@ commercial_catch <- dplyr::left_join(
       0.10,
       discard_rate
     ),
-    rate_applied = dplyr::if_else(
-      is.na(discard_rate),
-      dplyr::if_else(
-        species == "stripetail rockfish",
-        0.45,
-        dplyr::if_else(species == "pacific sanddab", 0.22, 0.01)
-      ), # bank rockfish 0.01
-      discard_rate
+    rate_applied = dplyr::case_when(
+      is.na(discard_rate) & species == "stripetail rockfish" ~ 0.45,
+      is.na(discard_rate) & species == "pacific sanddab" ~ 0.22,
+      is.na(discard_rate) & species == "bank rockfish" ~ 0.01,
+      is.na(discard_rate) & species == "yellowmouth rockfish" ~
+        average_discard_rate,
+      .default = discard_rate
     ),
     discard_mt = round(
       (rate_applied * landings_mt) / (1 - rate_applied),

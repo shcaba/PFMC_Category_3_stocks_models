@@ -41,8 +41,8 @@ wa_rec_hist_raw <- read.csv(here::here(
 # Oregon: 1979-1990
 or_rec_hist_raw <- read.csv(here::here(
   drive,
-  "Catch reconstructions", #"Pacific Sanddab",
-  "OR recreational", #"recfin",
+  "Catch reconstructions",
+  "OR recreational",
   "CTE507-1979---2000.csv"
 ))
 # there were no CA records for Pacific sanddab found in the historical catches
@@ -96,7 +96,12 @@ rec_bio_average <- rec_bio_raw |>
   dplyr::filter(
     IS_RETAINED == "RETAINED",
     SPECIES_NAME %in%
-      c("BANK ROCKFISH", "STRIPETAIL ROCKFISH", "PACIFIC SANDDAB")
+      c(
+        "BANK ROCKFISH",
+        "STRIPETAIL ROCKFISH",
+        "PACIFIC SANDDAB",
+        "YELLOWMOUTH ROCKFISH"
+      )
   ) |>
   dplyr::mutate(
     year = RECFIN_YEAR,
@@ -106,8 +111,17 @@ rec_bio_average <- rec_bio_raw |>
   ) |>
   dplyr::summarise(
     .by = c("species"), # the weights are very similar for OR and WA
-    average_weight = mean(RECFIN_IMPUTED_WEIGHT_KG, na.rm = TRUE)
-  )
+    average_weight = mean(RECFIN_IMPUTED_WEIGHT_KG, na.rm = TRUE),
+    agency_average_weight = mean(AGENCY_WEIGHT, na.rm = TRUE)
+  ) |>
+  dplyr::mutate(
+    average_weight = dplyr::if_else(
+      species == "yellowmouth rockfish",
+      agency_average_weight,
+      average_weight
+    )
+  ) |>
+  dplyr::select(-agency_average_weight)
 
 # There are no biological samples from Washington
 # Ave weight for modes were similar in CA, except shore modes
@@ -121,14 +135,19 @@ rec_bio_average <- rec_bio_raw |>
 rec_catch_format <- rec_catch_raw |>
   dplyr::filter(
     SPECIES_NAME %in%
-      c("PACIFIC SANDDAB", "BANK ROCKFISH", "STRIPETAIL ROCKFISH")
+      c(
+        "PACIFIC SANDDAB",
+        "BANK ROCKFISH",
+        "STRIPETAIL ROCKFISH",
+        "YELLOWMOUTH ROCKFISH"
+      )
   ) |>
   dplyr::mutate(
     year = RECFIN_YEAR,
     state = tolower(STATE_NAME),
     species = tolower(SPECIES_NAME)
   )
-# by species there are some records with TOTAL_MORTALITY_MT == 0 bu TOTAL_MORTALITY_NUM > 0
+# by species there are some records with TOTAL_MORTALITY_MT == 0t bu TOTAL_MORTALITY_NUM > 0
 #             species TOTAL_MORTALITY_NUM
 #       bank rockfish            798.8527 ~ 1%
 #     pacific sanddab            192.5523 ~ 0%
@@ -144,6 +163,7 @@ rec_catch_format <- rec_catch_raw |>
 #       bank rockfish         59.8516370
 #     pacific sanddab        801.7993693
 # stripetail rockfish          0.9697197
+# yellowmouth rockfish         1.3126025
 
 # rec_catch_mean_weight <- dplyr::left_join(
 #   x = rec_catch_format,
@@ -168,7 +188,8 @@ mrfss_catch <- mrfss_catch_all_raw |>
       c(
         "PACIFIC SANDDAB",
         "BANK ROCKFISH",
-        "STRIPETAIL ROCKFISH"
+        "STRIPETAIL ROCKFISH",
+        "YELLOWMOUTH ROCKFISH"
       )
   ) |>
   dplyr::group_by(YEAR, SPECIES_NAME) |>
@@ -208,7 +229,8 @@ wa_rec_hist <- dplyr::left_join(
       c(
         "BANK ROCKFISH",
         "PACIFIC SANDDAB",
-        "STRIPETAIL ROCKFISH"
+        "STRIPETAIL ROCKFISH",
+        "YELLOWMOUTH ROCKFISH"
       )
   ) |>
   dplyr::mutate(
@@ -235,7 +257,8 @@ or_rec_hist <- dplyr::left_join(
       c(
         "bank rockfish",
         "pacific sanddab",
-        "stripetail rockfish"
+        "stripetail rockfish",
+        "yellowmouth rockfish"
       )
   ) |>
   dplyr::mutate(
@@ -289,7 +312,8 @@ ca_rec_hist <- ca_rec_hist_raw |>
       c(
         "Bank Rockfish",
         "Pacific Sanddab",
-        "Stripetail Rockfish"
+        "Stripetail Rockfish",
+        "Yellowmouth Rockfish"
       )
   ) |>
   dplyr::mutate(
@@ -304,7 +328,6 @@ ca_rec_hist <- ca_rec_hist_raw |>
     landings_mt = sum(RETAINED_MT, na.rm = TRUE),
     discard_mt = 0
   )
-
 
 recreational_catch <- dplyr::bind_rows(
   or_rec_hist,
