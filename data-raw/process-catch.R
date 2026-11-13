@@ -6,7 +6,7 @@ processed_final_catches <- dplyr::bind_rows(
 ) |>
   dplyr::mutate(
     gear = dplyr::if_else(
-      species != "bank rockfish",
+      !species %in% c("bank rockfish", "pacific cod", "rosethorn rockfish"),
       "ALL",
       gear
     ),
