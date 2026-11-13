@@ -1,10 +1,19 @@
+species_list <- c(
+  "bank rockfish",
+  "pacific sanddab",
+  "stripetail rockfish",
+  "yellowmouth rockfish",
+  "pacific cod",
+  "starry rockfish",
+  "shortraker rockfish",
+  "redstripe rockfish",
+  "silvergray rockfish",
+  "rosethorn rockfish",
+  "flathead sole"
+)
+
 data <- nwfscSurvey::pull_gemm(
-  common_name = c(
-    "stripetail rockfish",
-    "Pacific sanddab",
-    "bank rockfish",
-    "yellowmouth rockfish"
-  ),
+  common_name = species_list,
   verbose = FALSE
 ) |>
   dplyr::filter(

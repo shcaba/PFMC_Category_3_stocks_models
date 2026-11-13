@@ -296,6 +296,19 @@ recreational_catch <- dplyr::bind_rows(
     catch_mt = sum(discard_mt + landings_mt)
   )
 
+# aggregate(catch_mt~species, recreational_catch, sum)
+#               species   catch_mt
+#         bank rockfish 1156.78860
+#         flathead sole    0.34350
+#           pacific cod 4841.47460
+#       pacific sanddab 3999.12930
+#    redstripe rockfish   27.44257
+#    rosethorn rockfish  121.15657
+#   silvergray rockfish   24.90387
+#       starry rockfish 3053.85870
+#   stripetail rockfish   14.72673
+#  yellowmouth rockfish    1.43930
+
 #===============================================================================
 # Save data
 #===============================================================================
