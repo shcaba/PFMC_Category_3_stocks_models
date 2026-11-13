@@ -4,7 +4,14 @@ bio_data <- nwfscSurvey::pull_bio(
     "Pacific sanddab",
     "stripetail rockfish",
     "bank rockfish",
-    "yellowmouth rockfish"
+    "yellowmouth rockfish",
+    "flathead sole",
+    "Pacific cod",
+    "rosethorn rockfish",
+    "redstripe rockfish",
+    "silvergray rockfish",
+    "shortraker rockfish",
+    "starry rockfish"
   )
 )
 maturity_data_raw <- nwfscSurvey::pull_biological_samples(
@@ -12,7 +19,14 @@ maturity_data_raw <- nwfscSurvey::pull_biological_samples(
     "Pacific sanddab",
     "stripetail rockfish",
     "bank rockfish",
-    "yellowmouth rockfish"
+    "yellowmouth rockfish",
+    "flathead sole",
+    "Pacific cod",
+    "rosethorn rockfish",
+    "redstripe rockfish",
+    "silvergray rockfish",
+    "shortraker rockfish",
+    "starry rockfish"
   ),
   standard_filtering = FALSE
 )
