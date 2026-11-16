@@ -6,7 +6,7 @@ processed_final_catches <- dplyr::bind_rows(
 ) |>
   dplyr::mutate(
     gear = dplyr::if_else(
-      species != "bank rockfish",
+      !species %in% c("bank rockfish", "pacific cod", "rosethorn rockfish"),
       "ALL",
       gear
     ),
@@ -21,6 +21,7 @@ processed_final_catches <- dplyr::bind_rows(
 # format for stock synthesis
 catches_ss3_formatted <- dplyr::bind_rows(
   processed_final_catches |>
+    dplyr::filter(species != "yellowmouth rockfish") |>
     dplyr::select(species, year, gear, landings_mt) |>
     dplyr::mutate(
       season = 1,
@@ -29,6 +30,7 @@ catches_ss3_formatted <- dplyr::bind_rows(
     ) |>
     dplyr::rename(catch = landings_mt),
   processed_final_catches |>
+    dplyr::filter(species != "yellowmouth rockfish") |>
     dplyr::summarise(
       .by = c(species, year),
       discard_mt = sum(discard_mt)
@@ -39,7 +41,16 @@ catches_ss3_formatted <- dplyr::bind_rows(
       fleet = "discard-fleet",
       catch_se = 0.01
     ) |>
-    dplyr::rename(catch = discard_mt)
+    dplyr::rename(catch = discard_mt),
+  processed_final_catches |>
+    dplyr::filter(species == "yellowmouth rockfish") |>
+    dplyr::select(species, year, gear, catch_mt) |>
+    dplyr::mutate(
+      season = 1,
+      fleet = paste0("landings-", gear),
+      catch_se = 0.01
+    ) |>
+    dplyr::rename(catch = catch_mt)
 ) |>
   dplyr::select(-gear) |>
   dplyr::relocate(catch, .before = catch_se) |>

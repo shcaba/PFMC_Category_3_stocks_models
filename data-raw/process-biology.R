@@ -1,9 +1,33 @@
 # Pull survey data to inform biological parameters
 bio_data <- nwfscSurvey::pull_bio(
-  common_name = c("Pacific sanddab", "stripetail rockfish", "bank rockfish")
+  common_name = c(
+    "Pacific sanddab",
+    "stripetail rockfish",
+    "bank rockfish",
+    "yellowmouth rockfish",
+    "flathead sole",
+    "Pacific cod",
+    "rosethorn rockfish",
+    "redstripe rockfish",
+    "silvergray rockfish",
+    "shortraker rockfish",
+    "starry rockfish"
+  )
 )
 maturity_data_raw <- nwfscSurvey::pull_biological_samples(
-  common_name = c("Pacific sanddab", "stripetail rockfish", "bank rockfish"),
+  common_name = c(
+    "Pacific sanddab",
+    "stripetail rockfish",
+    "bank rockfish",
+    "yellowmouth rockfish",
+    "flathead sole",
+    "Pacific cod",
+    "rosethorn rockfish",
+    "redstripe rockfish",
+    "silvergray rockfish",
+    "shortraker rockfish",
+    "starry rockfish"
+  ),
   standard_filtering = FALSE
 )
 
@@ -28,7 +52,8 @@ weight_length_estimates <- bio_data |>
 
 
 growth <- nwfscSurvey::est_growth(
-  dat = bio_data |> dplyr::filter(species == "Pacific sanddab", !is.na(Age_years), Sex != "U"),
+  dat = bio_data |>
+    dplyr::filter(species == "Pacific sanddab", !is.na(Age_years), Sex != "U"),
   return_df = FALSE
 )
 

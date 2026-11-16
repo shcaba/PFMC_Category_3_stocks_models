@@ -49,6 +49,14 @@ bds_raw_stripetail <- bds.pacfin
 
 load(here::here(
   drive,
+  "Yellowmouth Rockfish",
+  "pacfin",
+  "PacFIN.YMTH.bds.25.Sep.2026.RData"
+))
+bds_raw_yellowmouth <- bds.pacfin
+
+load(here::here(
+  drive,
   "Bank Rockfish",
   "pacfin",
   "PacFIN.BANK.bds.25.Sep.2026.RData"
@@ -81,6 +89,14 @@ bds_clean_sanddab <- pacfintools::cleanPacFIN(
 # HKL: 5883, TWL: 35147
 # SEX F: 32605, M: 5527, U: 3644
 # observed size of females > males
+
+bds_clean_yellowmouth <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_yellowmouth,
+  keep_gears = "TWL"
+)
+# 4615 records: CA 112, OR 3374, WA 1129
+# SEX F: 2093, M: 1867, U: 655
+# data start in 1973 in WA
 
 bds_clean_bank <- pacfintools::cleanPacFIN(
   Pdata = bds_raw_bank
@@ -272,6 +288,60 @@ length_composition_data_sanndab_split_by_sex <- combine_comps(
   comps_1 = retained_lengths_sanddab_by_sex_wide,
   comps_2 = discard_lengths_sanddab
 )
+
+# Yellowmouth rockfish ==============================================================
+length_bins <- seq(24, 54, 2)
+formatted_catch_yellowmouth <- pacfintools::formatCatch(
+  catch = landings |>
+    dplyr::filter(species == "yellowmouth rockfish"),
+  strat = c("state"),
+  valuename = "landings_mt"
+)
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean_yellowmouth |>
+    dplyr::mutate(stratification = AGENCY_CODE),
+  catch = formatted_catch_yellowmouth,
+  weight_lengt = weight_length_estimates |>
+    dplyr::filter(species == "yellowmouth rockfish"),
+  length_bins = length_bins
+)
+
+retained_lengths_yellowmouth <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+length_trips_samples_yellowmouth <- comps$length_trips_samples |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+retained_lengths_yellowmouth_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean_yellowmouth |>
+    dplyr::mutate(stratification = AGENCY_CODE),
+  catch = formatted_catch_yellowmouth,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == "yellowmouth rockfish"),
+  length_bins = length_bins
+) |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+length_composition_data_yellowmouth <- retained_lengths_yellowmouth
+length_composition_data_yellowmouth_split_by_sex <- retained_lengths_yellowmouth_by_sex_wide
+
+write_named_csvs(
+  length_composition_data_yellowmouth,
+  retained_lengths_yellowmouth_by_sex_wide,
+  length_trips_samples_yellowmouth,
+  dir = here::here("data-tables")
+)
+
 
 # Output all files =============================================================
 write_named_csvs(
