@@ -1,5 +1,9 @@
 drive <- "G:/Shared drives/NMFS NWC FRAM Population Ecology/Assessment Data (contains PII)/2027 Assessment Cycle/Category_3"
 
+
+#===============================================================================
+# Load discard data files
+#===============================================================================
 discard_comp_stripetail <-
   read.csv(here::here(
     drive,
@@ -24,7 +28,6 @@ discard_comp_sanddab <-
     fleet = "discard-comps",
     partition = 0
   )
-
 discard_comp_bank <-
   read.csv(here::here(
     drive,
@@ -37,6 +40,49 @@ discard_comp_bank <-
     fleet = "discard-comps",
     partition = 0
   )
+discard_comp_rosethorn <-
+  read.csv(here::here(
+    drive,
+    "Rosethorn Rockfish",
+    "wcgop",
+    "recommended",
+    "wcgop_discard_lengths.csv"
+  )) |>
+  dplyr::mutate(
+    fleet = "discard-comps",
+    partition = 0
+  )
+discard_comp_flathead <-
+  read.csv(here::here(
+    drive,
+    "Rosethorn Rockfish",
+    "wcgop",
+    "recommended",
+    "wcgop_discard_lengths.csv"
+  )) |>
+  dplyr::mutate(
+    fleet = "discard-comps",
+    partition = 0
+  )
+
+#===============================================================================
+# Load PacFIN data by species
+#===============================================================================
+load(here::here(
+  drive,
+  "Flathead Sole",
+  "pacfin",
+  "PacFIN.FSOL.bds.25.Sep.2026.RData"
+))
+bds_raw_flathead <- bds.pacfin
+
+load(here::here(
+  drive,
+  "Rosethorn Rockfish",
+  "pacfin",
+  "PacFIN.RSTN.bds.25.Sep.2026.RData"
+))
+bds_raw_rosethorn <- bds.pacfin
 
 load(here::here(
   drive,
@@ -72,33 +118,27 @@ load(here::here(
 ))
 bds_raw_sanddab <- bds.pacfin
 
-bds_clean_stripetail <- pacfintools::cleanPacFIN(
-  Pdata = bds_raw_stripetail,
-  keep_gears = "TWL"
-)
-# 6845 records: CA 4705, OR 1978, WA 162
-# TWL: 6073, MID: 678
-# SEX F: 5906, M: 454, U: 485
-# observed size of females > males
+#===============================================================================
+# Load the PacFIN landings data
+#===============================================================================
 
-bds_clean_sanddab <- pacfintools::cleanPacFIN(
-  Pdata = bds_raw_sanddab,
-  keep_gears = "TWL"
-)
-# 41776 records: CA 25050, OR 16606, WA 120
-# HKL: 5883, TWL: 35147
-# SEX F: 32605, M: 5527, U: 3644
-# observed size of females > males
+landings <- landings_by_state_for_expansion |>
+  dplyr::mutate(
+    state = dplyr::if_else(
+      state == "california",
+      "C",
+      dplyr::if_else(state == "oregon", "O", "W")
+    )
+  )
 
-bds_clean_yellowmouth <- pacfintools::cleanPacFIN(
-  Pdata = bds_raw_yellowmouth,
-  keep_gears = "TWL"
-)
-# 4615 records: CA 112, OR 3374, WA 1129
-# SEX F: 2093, M: 1867, U: 655
-# data start in 1973 in WA
 
-bds_clean_bank <- pacfintools::cleanPacFIN(
+#===============================================================================
+# Bank rockfish
+#===============================================================================
+species_name <- "bank rockfish"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
   Pdata = bds_raw_bank
 ) |>
   dplyr::mutate(
@@ -112,20 +152,10 @@ bds_clean_bank <- pacfintools::cleanPacFIN(
 # SEX F: 19512, M: 17205, U: 13731
 # data start in 1977 in CA (1977: n = 64, 1978: n= 185, 1979: n= 26, 1980: n=28)
 
-landings <- landings_by_state_for_expansion |>
-  dplyr::mutate(
-    state = dplyr::if_else(
-      state == "california",
-      "C",
-      dplyr::if_else(state == "oregon", "O", "W")
-    )
-  )
-
-# Bank rockfish ================================================================
-length_bins <- seq(12, 50, 2)
-formatted_catch_bank <- pacfintools::formatCatch(
+length_bins <- seq(bins$low, bins$high, bins$bin)
+formatted_catch <- pacfintools::formatCatch(
   catch = landings |>
-    dplyr::filter(species == "bank rockfish"),
+    dplyr::filter(species == species_name),
   strat = c("state", "gear"),
   valuename = "landings_mt"
 ) |>
@@ -142,42 +172,65 @@ formatted_catch_bank <- pacfintools::formatCatch(
   dplyr::arrange(year)
 
 comps <- get_expanded_length_comps_standard(
-  data = bds_clean_bank |>
+  data = bds_clean |>
     dplyr::mutate(stratification = paste0(AGENCY_CODE, ".", fleet)),
-  catch = formatted_catch_bank,
+  catch = formatted_catch,
   weight_length = weight_length_estimates |>
-    dplyr::filter(species == "bank rockfish"),
+    dplyr::filter(species == species_name),
   length_bins = length_bins
 )
-retained_lengths_bank <- comps$formatted_length_comps
+retained_length <- comps$formatted_length_comps
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean |>
+    dplyr::mutate(stratification = paste0(AGENCY_CODE, ".", fleet)),
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+
+discard_lengths <- format_two_sex_comps(
+  data = discard_comp_bank
+)
+
 length_trips_samples_bank <- comps$length_trips_samples
 
-retained_lengths_bank_by_sex_wide <- get_expanded_length_comps_by_sex(
-  data = bds_clean_bank |>
-    dplyr::mutate(stratification = paste0(AGENCY_CODE, ".", fleet)),
-  catch = formatted_catch_bank,
-  weight_length = weight_length_estimates |>
-    dplyr::filter(species == "bank rockfish"),
-  length_bins = length_bins
-)
-
-discard_lengths_sanddab <- format_two_sex_comps(
-  data = discard_comp_sanddab
-)
 length_composition_data_bank <- combine_comps(
-  comps_1 = retained_lengths_bank,
-  comps_2 = discard_lengths_bank
+  comps_1 = retained_lengths,
+  comps_2 = discard_lengths
 )
 length_composition_data_bank_split_by_sex <- combine_comps(
-  comps_1 = retained_lengths_bank_by_sex_wide,
-  comps_2 = discard_lengths_bank
+  comps_1 = retained_lengths_by_sex_wide,
+  comps_2 = discard_lengths
 )
 
-# Stripetail rockfish ==========================================================
-length_bins <- seq(6, 36, 2)
-formatted_catch_stripetail <- pacfintools::formatCatch(
+write_named_csvs(
+  length_composition_data_bank,
+  retained_lengths_bank_by_sex_wide,
+  length_trips_samples_bank,
+  dir = here::here("data-tables")
+)
+
+#===============================================================================
+# Stripetail rockfish
+#===============================================================================
+species_name <- "stripetail rockfish"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_stripetail,
+  keep_gears = "TWL"
+)
+# 6845 records: CA 4705, OR 1978, WA 162
+# TWL: 6073, MID: 678
+# SEX F: 5906, M: 454, U: 485
+# observed size of females > males
+
+length_bins <- seq(bins$low, bins$high, bins$bin)
+formatted_catch <- pacfintools::formatCatch(
   catch = landings |>
-    dplyr::filter(species == "stripetail rockfish"),
+    dplyr::filter(species == species_name),
   strat = c("state"),
   valuename = "landings_mt"
 ) |>
@@ -190,14 +243,14 @@ formatted_catch_stripetail <- pacfintools::formatCatch(
   dplyr::arrange(year)
 
 comps <- get_expanded_length_comps_standard(
-  data = bds_clean_stripetail |>
+  data = bds_clean |>
     dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_stripetail,
+  catch = formatted_catch,
   weight_length = weight_length_estimates |>
-    dplyr::filter(species == "stripetail rockfish"),
+    dplyr::filter(species == species_name),
   length_bins = length_bins
 )
-retained_lengths_stripetail <- comps$formatted_length_comps |>
+retained_lengths <- comps$formatted_length_comps |>
   dplyr::mutate(
     month = 7,
     fleet = "landed-comps",
@@ -208,12 +261,27 @@ length_trips_samples_stripetail <- comps$length_trips_samples |>
     fleet = "landed-comps"
   )
 
-retained_lengths_stripetail_by_sex_wide <- get_expanded_length_comps_by_sex(
-  data = bds_clean_stripetail |>
-    dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_stripetail,
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U"),
+  catch = formatted_catch,
   weight_length = weight_length_estimates |>
-    dplyr::filter(species == "stripetail rockfish"),
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths_unsexed <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE),
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
   length_bins = length_bins
 ) |>
   dplyr::mutate(
@@ -222,39 +290,64 @@ retained_lengths_stripetail_by_sex_wide <- get_expanded_length_comps_by_sex(
     partition = 0
   )
 
-discard_lengths_stripetail <- format_two_sex_comps(
+discard_lengths <- format_two_sex_comps(
   data = discard_comp_stripetail
 )
 
 length_composition_data_stripetail <- combine_comps(
-  comps_1 = retained_lengths_stripetail,
-  comps_2 = discard_lengths_stripetail
+  comps_1 = retained_lengths,
+  comps_2 = discard_lengths
 )
 length_composition_data_stripetail_split_by_sex <- combine_comps(
-  comps_1 = retained_lengths_stripetail_by_sex_wide,
-  comps_2 = discard_lengths_stripetail
+  comps_1 = retained_lengths_by_sex_wide,
+  comps_2 = discard_lengths
+)
+length_composition_data_unsexed_stripetail <- combine_comps(
+  comps_1 = retained_lengths_unsexed,
+  comps_2 = discard_comp_stripetail
 )
 
+write_named_csvs(
+  length_composition_data_stripetail,
+  length_composition_data_unsexed_stripetail,
+  length_composition_data_stripetail_split_by_sex,
+  length_trips_samples_stripetail,
+  dir = here::here("data-tables")
+)
 
-# Pacific sanddab ==============================================================
-length_bins <- seq(8, 40, 2)
-formatted_catch_sanddab <- pacfintools::formatCatch(
+#===============================================================================
+# Pacific sanddab
+#===============================================================================
+species_name <- "pacific sanddab"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_sanddab,
+  keep_gears = "TWL"
+)
+# 41776 records: CA 25050, OR 16606, WA 120
+# HKL: 5883, TWL: 35147
+# SEX F: 32605, M: 5527, U: 3644
+# observed size of females > males
+
+length_bins <- seq(bins$low, bins$high, bins$bin)
+formatted_catch <- pacfintools::formatCatch(
   catch = landings |>
-    dplyr::filter(species == "pacific sanddab"),
+    dplyr::filter(species == species_name),
   strat = c("state"),
   valuename = "landings_mt"
 )
 
 comps <- get_expanded_length_comps_standard(
-  data = bds_clean_sanddab |>
+  data = bds_clean |>
     dplyr::filter(year > 1980) |>
     dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_sanddab,
-  weight_lengt = weight_length_estimates |>
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
     dplyr::filter(species == "Pacific sanddab"),
   length_bins = length_bins
 )
-retained_lengths_sanddab <- comps$formatted_length_comps |>
+retained_lengths <- comps$formatted_length_comps |>
   dplyr::mutate(
     month = 7,
     fleet = "landed-comps",
@@ -265,11 +358,11 @@ length_trips_samples_sanddab <- comps$length_trips_samples |>
     fleet = "landed-comps"
   )
 
-retained_lengths_sanddab_by_sex_wide <- get_expanded_length_comps_by_sex(
-  data = bds_clean_sanddab |>
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean |>
     dplyr::filter(year > 1980) |>
     dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_sanddab,
+  catch = formatted_catch,
   weight_length = weight_length_estimates |>
     dplyr::filter(species == "Pacific sanddab"),
   length_bins = length_bins
@@ -280,34 +373,63 @@ retained_lengths_sanddab_by_sex_wide <- get_expanded_length_comps_by_sex(
     partition = 0
   )
 
+discard_lengths <- format_two_sex_comps(
+  data = discard_comp_sanddab
+)
 length_composition_data_sanndab <- combine_comps(
-  comps_1 = retained_lengths_sanddab,
-  comps_2 = discard_lengths_sanddab
+  comps_1 = retained_lengths,
+  comps_2 = discard_lengths
 )
 length_composition_data_sanndab_split_by_sex <- combine_comps(
-  comps_1 = retained_lengths_sanddab_by_sex_wide,
-  comps_2 = discard_lengths_sanddab
+  comps_1 = retained_lengths_by_sex_wide,
+  comps_2 = discard_lengths
 )
 
-# Yellowmouth rockfish ==============================================================
+write_named_csvs(
+  length_composition_data_sanndab,
+  length_composition_data_sanndab_split_by_sex,
+  length_trips_samples_sanddab,
+  dir = here::here("data-tables")
+)
+
+#===============================================================================
+# Yellowmouth rockfish
+#===============================================================================
+bds_clean_yellowmouth <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_yellowmouth,
+  keep_gears = "TWL"
+)
+# 4615 records: CA 112, OR 3374, WA 1129
+# SEX F: 2093, M: 1867, U: 655
+# data start in 1973 in WA
+species_name <- "yellowmouth rockfish"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_yellowmouth,
+  keep_gears = "TWL"
+)
+# 4615 records: CA 112, OR 3374, WA 1129
+# SEX F: 2093, M: 1867, U: 655
+# data start in 1973 in WA
+
 length_bins <- seq(24, 54, 2)
-formatted_catch_yellowmouth <- pacfintools::formatCatch(
+formatted_catch <- pacfintools::formatCatch(
   catch = landings |>
-    dplyr::filter(species == "yellowmouth rockfish"),
+    dplyr::filter(species == species_name),
   strat = c("state"),
   valuename = "landings_mt"
 )
 
 comps <- get_expanded_length_comps_standard(
-  data = bds_clean_yellowmouth |>
+  data = bds_clean |>
     dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_yellowmouth,
+  catch = formatted_catch,
   weight_lengt = weight_length_estimates |>
-    dplyr::filter(species == "yellowmouth rockfish"),
+    dplyr::filter(species == species_name),
   length_bins = length_bins
 )
-
-retained_lengths_yellowmouth <- comps$formatted_length_comps |>
+retained_lengths <- comps$formatted_length_comps |>
   dplyr::mutate(
     month = 7,
     fleet = "landed-comps",
@@ -318,12 +440,27 @@ length_trips_samples_yellowmouth <- comps$length_trips_samples |>
     fleet = "landed-comps"
   )
 
-retained_lengths_yellowmouth_by_sex_wide <- get_expanded_length_comps_by_sex(
-  data = bds_clean_yellowmouth |>
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U"),
+  catch = formatted_catch,
+  weight_lengt = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths_unsexed <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean |>
     dplyr::mutate(stratification = AGENCY_CODE),
-  catch = formatted_catch_yellowmouth,
+  catch = formatted_catch,
   weight_length = weight_length_estimates |>
-    dplyr::filter(species == "yellowmouth rockfish"),
+    dplyr::filter(species == species_name),
   length_bins = length_bins
 ) |>
   dplyr::mutate(
@@ -332,27 +469,14 @@ retained_lengths_yellowmouth_by_sex_wide <- get_expanded_length_comps_by_sex(
     partition = 0
   )
 
-length_composition_data_yellowmouth <- retained_lengths_yellowmouth
-length_composition_data_yellowmouth_split_by_sex <- retained_lengths_yellowmouth_by_sex_wide
+length_composition_data_yellowmouth <- retained_lengths
+length_composition_data_unsexed_yellowmouth <- retained_lengths_unsexed
+length_composition_data_yellowmouth_split_by_sex <- retained_lengths_by_sex_wide
 
 write_named_csvs(
   length_composition_data_yellowmouth,
-  retained_lengths_yellowmouth_by_sex_wide,
+  length_composition_data_unsexed_yellowmouth,
+  length_composition_data_yellowmouth_split_by_sex,
   length_trips_samples_yellowmouth,
-  dir = here::here("data-tables")
-)
-
-
-# Output all files =============================================================
-write_named_csvs(
-  length_composition_data_sanndab,
-  length_composition_data_stripetail,
-  length_composition_data_bank,
-  length_composition_data_sanndab_split_by_sex,
-  length_composition_data_stripetail_split_by_sex,
-  length_composition_data_bank_split_by_sex,
-  length_trips_samples_stripetail,
-  length_trips_samples_sanddab,
-  length_trips_samples_bank,
   dir = here::here("data-tables")
 )
