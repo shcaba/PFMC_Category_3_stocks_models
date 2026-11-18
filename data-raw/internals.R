@@ -53,7 +53,7 @@ length_bins <- matrix(
 )
 
 colnames(length_bins) <- c("species", "low", "high", "bin")
-length_bins <- length_bins |>
+length_bins_all_species <- length_bins |>
   tibble::as_tibble() |>
   dplyr::mutate(
     low = as.numeric(low),
@@ -62,6 +62,6 @@ length_bins <- length_bins |>
   )
 
 usethis::use_data(
-  length_bins,
+  length_bins_all_species,
   overwrite = TRUE
 )
