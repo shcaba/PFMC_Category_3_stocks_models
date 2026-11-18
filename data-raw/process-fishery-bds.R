@@ -179,7 +179,7 @@ comps <- get_expanded_length_comps_standard(
     dplyr::filter(species == species_name),
   length_bins = length_bins
 )
-retained_length <- comps$formatted_length_comps
+retained_lengths <- comps$formatted_length_comps
 
 retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
   data = bds_clean |>
@@ -207,7 +207,7 @@ length_composition_data_bank_split_by_sex <- combine_comps(
 
 write_named_csvs(
   length_composition_data_bank,
-  retained_lengths_bank_by_sex_wide,
+  length_composition_data_bank_split_by_sex,
   length_trips_samples_bank,
   dir = here::here("data-tables")
 )
