@@ -55,7 +55,7 @@ discard_comp_rosethorn <-
 discard_comp_flathead <-
   read.csv(here::here(
     drive,
-    "Rosethorn Rockfish",
+    "Flathead Sole",
     "wcgop",
     "recommended",
     "wcgop_discard_lengths.csv"
@@ -359,9 +359,7 @@ length_trips_samples_sanddab <- comps$length_trips_samples |>
   )
 
 retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
-  data = bds_clean |>
-    dplyr::filter(year > 1980) |>
-    dplyr::mutate(stratification = AGENCY_CODE),
+  data = bds_clean,
   catch = formatted_catch,
   weight_length = weight_length_estimates |>
     dplyr::filter(species == "Pacific sanddab"),
@@ -478,5 +476,81 @@ write_named_csvs(
   length_composition_data_unsexed_yellowmouth,
   length_composition_data_yellowmouth_split_by_sex,
   length_trips_samples_yellowmouth,
+  dir = here::here("data-tables")
+)
+
+
+#===============================================================================
+# Flathead sole
+#===============================================================================
+species_name <- "flathead sole"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_flathead
+) |>
+  # remove the single unsexed length
+  dplyr::filter(SEX_CODE != "U", state != "WA") |>
+  dplyr::mutate(stratification = AGENCY_CODE)
+# 2137 records: CA 1, OR 2030, WA 106
+# there are no WA landings data: these samples come from 2021 and 2024 only
+# these WA records come from one ftid in 2021 and 3 ftid in 2024
+# MID: 105, TWL: 2032
+# SEX F: 1652, M: 484, U: 1
+# females are larger than males
+
+length_bins <- seq(bins$low, bins$high, bins$bin)
+formatted_catch <- pacfintools::formatCatch(
+  catch = landings |>
+    dplyr::filter(species == species_name),
+  strat = c("state"),
+  valuename = "landings_mt"
+)
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean,
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+length_trips_samples_flathead <- comps$length_trips_samples |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean,
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+) |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+discard_lengths <- format_two_sex_comps(
+  data = discard_comp_flathead
+)
+length_composition_data_flathead <- combine_comps(
+  comps_1 = retained_lengths,
+  comps_2 = discard_lengths
+)
+length_composition_data_flathead_split_by_sex <- combine_comps(
+  comps_1 = retained_lengths_by_sex_wide,
+  comps_2 = discard_lengths
+)
+
+write_named_csvs(
+  length_composition_data_flathead,
+  length_composition_data_flathead_split_by_sex,
+  length_trips_samples_flathead,
   dir = here::here("data-tables")
 )
