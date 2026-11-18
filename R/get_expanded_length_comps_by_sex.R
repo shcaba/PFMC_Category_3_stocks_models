@@ -59,47 +59,82 @@ get_expanded_length_comps_by_sex <- function(
     "input_n",
     length_bins
   )
-  retained_lengths_by_sex <- dplyr::bind_rows(
-    pacfintools::writeComps(
-      inComps = length_comps_long_u |> dplyr::filter(SEX_CODE == "U"),
-      column_with_input_n = input_n_method,
-      comp_bins = length_bins,
-      verbose = verbose
-    ) |>
-      dplyr::mutate(
-        month = 7,
-        sex = 0
+
+  if (length(unique(expanded_comps$SEX_CODE) %in% c("F", "M")) == 2) {
+    retained_lengths_by_sex <- dplyr::bind_rows(
+      pacfintools::writeComps(
+        inComps = length_comps_long_f |> dplyr::filter(SEX_CODE == "F"),
+        column_with_input_n = input_n_method,
+        comp_bins = length_bins,
+        verbose = verbose
       ) |>
-      dplyr::rename_with(
-        ~new_col_names
-      ),
-    pacfintools::writeComps(
-      inComps = length_comps_long_f |> dplyr::filter(SEX_CODE == "F"),
-      column_with_input_n = input_n_method,
-      comp_bins = length_bins,
-      verbose = verbose
-    ) |>
-      dplyr::mutate(
-        month = 7,
-        sex = 1
+        dplyr::mutate(
+          month = 7,
+          sex = 1
+        ) |>
+        dplyr::rename_with(
+          ~new_col_names
+        ),
+      pacfintools::writeComps(
+        inComps = length_comps_long_m |> dplyr::filter(SEX_CODE == "M"),
+        column_with_input_n = input_n_method,
+        comp_bins = length_bins,
+        verbose = verbose
       ) |>
-      dplyr::rename_with(
-        ~new_col_names
-      ),
-    pacfintools::writeComps(
-      inComps = length_comps_long_m |> dplyr::filter(SEX_CODE == "M"),
-      column_with_input_n = input_n_method,
-      comp_bins = length_bins,
-      verbose = verbose
-    ) |>
-      dplyr::mutate(
-        month = 7,
-        sex = 2
+        dplyr::mutate(
+          month = 7,
+          sex = 2
+        ) |>
+        dplyr::rename_with(
+          ~new_col_names
+        )
+    )
+  }
+  if (length(unique(expanded_comps$SEX_CODE) %in% c("F", "M", "U")) == 3) {
+    retained_lengths_by_sex <- dplyr::bind_rows(
+      pacfintools::writeComps(
+        inComps = length_comps_long_f |> dplyr::filter(SEX_CODE == "F"),
+        column_with_input_n = input_n_method,
+        comp_bins = length_bins,
+        verbose = verbose
       ) |>
-      dplyr::rename_with(
-        ~new_col_names
-      )
-  ) |>
+        dplyr::mutate(
+          month = 7,
+          sex = 1
+        ) |>
+        dplyr::rename_with(
+          ~new_col_names
+        ),
+      pacfintools::writeComps(
+        inComps = length_comps_long_m |> dplyr::filter(SEX_CODE == "M"),
+        column_with_input_n = input_n_method,
+        comp_bins = length_bins,
+        verbose = verbose
+      ) |>
+        dplyr::mutate(
+          month = 7,
+          sex = 2
+        ) |>
+        dplyr::rename_with(
+          ~new_col_names
+        ),
+      pacfintools::writeComps(
+        inComps = length_comps_long_u |> dplyr::filter(SEX_CODE == "U"),
+        column_with_input_n = input_n_method,
+        comp_bins = length_bins,
+        verbose = verbose
+      ) |>
+        dplyr::mutate(
+          month = 7,
+          sex = 0
+        ) |>
+        dplyr::rename_with(
+          ~new_col_names
+        )
+    )
+  }
+
+  retained_lengths_by_sex <- retained_lengths_by_sex |>
     dplyr::mutate(partition = 0)
 
   new_col_names <- c(
