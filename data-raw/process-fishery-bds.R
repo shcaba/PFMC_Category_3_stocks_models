@@ -554,3 +554,107 @@ write_named_csvs(
   length_trips_samples_flathead,
   dir = here::here("data-tables")
 )
+
+#===============================================================================
+# Rosethorn rockfish
+#===============================================================================
+species_name <- "rosethorn rockfish"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_rosethorn
+) |>
+  # very few samples by year before this
+  dplyr::filter(year >= 1983) |>
+  dplyr::mutate(
+    gear = dplyr::if_else(
+      geargroup %in% c("TWL", "TWS", "MID"),
+      "TWL",
+      "FG"
+    ),
+    stratification = AGENCY_CODE
+  )
+# 5515 records: CA 1220, OR 2382, WA 1913
+# TWL: 3412, FG 2103
+# SEX F: 1919, M: 2761, U: 835
+# all sexes are similar and similar across gears
+
+ggplot2::ggplot(bds_clean, ggplot2::aes(x = lengthcm, fill = SEX_CODE)) +
+  ggplot2::geom_density(alpha = 0.25) +
+  ggplot2::facet_grid("gear")
+
+length_bins <- seq(bins$low, bins$high, bins$bin)
+formatted_catch <- pacfintools::formatCatch(
+  catch = landings |>
+    dplyr::filter(species == species_name),
+  strat = c("state"),
+  valuename = "landings_mt"
+)
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean,
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+length_trips_samples_rosethorn <- comps$length_trips_samples |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U"),
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths_unsexed <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean,
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+) |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+discard_lengths <- format_two_sex_comps(
+  data = discard_comp_rosethorn
+)
+length_composition_data_rosethorn <- combine_comps(
+  comps_1 = retained_lengths,
+  comps_2 = discard_lengths
+)
+length_composition_data_rosethorn_split_by_sex <- combine_comps(
+  comps_1 = retained_lengths_by_sex_wide,
+  comps_2 = discard_lengths
+)
+length_composition_data_rosethorn_unsexed <- combine_comps(
+  comps_1 = retained_lengths_unsexed,
+  comps_2 = discard_comp_rosethorn
+)
+
+write_named_csvs(
+  length_composition_data_rosethorn,
+  length_composition_data_rosethorn_split_by_sex,
+  length_composition_data_rosethorn_unsexed,
+  length_trips_samples_rosethorn,
+  dir = here::here("data-tables")
+)
