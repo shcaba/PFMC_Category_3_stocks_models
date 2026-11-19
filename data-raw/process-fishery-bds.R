@@ -78,6 +78,14 @@ bds_raw_flathead <- bds.pacfin
 
 load(here::here(
   drive,
+  "Silvergray Rockfish",
+  "pacfin",
+  "PacFIN.SLGR.bds.25.Sep.2026.RData"
+))
+bds_raw_silvergray <- bds.pacfin
+
+load(here::here(
+  drive,
   "Rosethorn Rockfish",
   "pacfin",
   "PacFIN.RSTN.bds.25.Sep.2026.RData"
@@ -393,7 +401,7 @@ write_named_csvs(
 #===============================================================================
 # Yellowmouth rockfish
 #===============================================================================
-bds_clean_yellowmouth <- pacfintools::cleanPacFIN(
+bds_clean <- pacfintools::cleanPacFIN(
   Pdata = bds_raw_yellowmouth,
   keep_gears = "TWL"
 )
@@ -478,7 +486,6 @@ write_named_csvs(
   length_trips_samples_yellowmouth,
   dir = here::here("data-tables")
 )
-
 
 #===============================================================================
 # Flathead sole
@@ -656,5 +663,96 @@ write_named_csvs(
   length_composition_data_rosethorn_split_by_sex,
   length_composition_data_rosethorn_unsexed,
   length_trips_samples_rosethorn,
+  dir = here::here("data-tables")
+)
+
+#===============================================================================
+# Silvergray rockfish
+#===============================================================================
+bds_clean <- pacfintools::cleanPacFIN(
+  Pdata = bds_raw_silvergray
+) |>
+  dplyr::mutate(
+    gear = dplyr::if_else(
+      geargroup %in% c("TWL", "TWS", "MID"),
+      "TWL",
+      "FG"
+    ),
+    stratification = AGENCY_CODE
+  )
+# 9034 records: CA 98, OR 3332, WA 5604
+# SEX F: 3635, M: 4067, U: 1332
+
+ggplot2::ggplot(bds_clean, ggplot2::aes(x = lengthcm, fill = SEX_CODE)) +
+  ggplot2::geom_density(alpha = 0.25) +
+  ggplot2::facet_grid("gear")
+
+species_name <- "silvergray rockfish"
+bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+
+formatted_catch <- pacfintools::formatCatch(
+  catch = landings |>
+    dplyr::filter(species == species_name),
+  strat = c("state"),
+  valuename = "landings_mt"
+)
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE),
+  catch = formatted_catch,
+  weight_lengt = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+length_trips_samples_yellowmouth <- comps$length_trips_samples |>
+  dplyr::mutate(
+    fleet = "landed-comps"
+  )
+
+comps <- get_expanded_length_comps_standard(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U"),
+  catch = formatted_catch,
+  weight_lengt = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+)
+retained_lengths_unsexed <- comps$formatted_length_comps |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
+  data = bds_clean |>
+    dplyr::mutate(stratification = AGENCY_CODE),
+  catch = formatted_catch,
+  weight_length = weight_length_estimates |>
+    dplyr::filter(species == species_name),
+  length_bins = length_bins
+) |>
+  dplyr::mutate(
+    month = 7,
+    fleet = "landed-comps",
+    partition = 0
+  )
+
+length_composition_data_yellowmouth <- retained_lengths
+length_composition_data_unsexed_yellowmouth <- retained_lengths_unsexed
+length_composition_data_yellowmouth_split_by_sex <- retained_lengths_by_sex_wide
+
+write_named_csvs(
+  length_composition_data_yellowmouth,
+  length_composition_data_unsexed_yellowmouth,
+  length_composition_data_yellowmouth_split_by_sex,
+  length_trips_samples_yellowmouth,
   dir = here::here("data-tables")
 )
