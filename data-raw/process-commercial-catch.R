@@ -786,6 +786,29 @@ ggplot2::ggplot(
 ) +
   ggplot2::geom_bar(stat = "identity") +
   ggplot2::facet_grid("species", scales = "free_y")
+
+#===============================================================================
+# Add research mortality for strieptail rockfish
+#===============================================================================
+
+research_mortality <- nwfscSurvey::pull_gemm(
+  common_name = c("stripetail rockfish", "redstripe rockfish")
+) |>
+  dplyr::mutate(species = tolower(species)) |>
+  dplyr::filter(sector == "Research") |>
+  dplyr::summarise(
+    .by = c(species, year),
+    landings_mt = 0,
+    discard_mt = 0,
+    gear = "research",
+    catch_mt = sum(mortality_landings_and_discard_mortality)
+  )
+
+commercial_catch <- dplyr::bind_rows(
+  commercial_catch,
+  research_mortality
+)
+
 #===============================================================================
 # Save output
 #===============================================================================
