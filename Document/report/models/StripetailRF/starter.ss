@@ -1,5 +1,5 @@
 #C file created using an r4ss function
-#C file write time: 2026-11-11  17:44:08
+#C file write time: 2026-11-20  09:57:46
 #
 datafile.dat #_datfile
 control.ss_new #_ctlfile
@@ -15,7 +15,7 @@ control.ss_new #_ctlfile
 10 #_last_estimation_phase
 0 #_MCMCburn
 1 #_MCMCthin
-0.1 #_jitter_fraction
+0 #_jitter_fraction
 -1 #_minyr_sdreport
 -2 #_maxyr_sdreport
 0 #_N_STD_yrs
