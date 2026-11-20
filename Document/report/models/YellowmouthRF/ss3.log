@@ -1,0 +1,31 @@
+
+Initial statistics: 1 variables; iteration 0; function evaluation 0; phase 1
+Function value 8.6552644e+01; maximum gradient component mag 1.7335e+02
+Var    Value     Gradient |Var    Value     Gradient |Var    Value     Gradient
+  1 -0.19398  1.73347e+02 |
+
+ - final statistics:
+1 variables; iteration 2; function evaluation 14
+Function value 8.1589e+01; maximum gradient component mag 9.5926e-02
+Exit code = 1;  converg criter 1.0000e+01
+Var    Value     Gradient |Var    Value     Gradient |Var    Value     Gradient
+  1 -0.22453  9.59258e-02 |
+
+Initial statistics: 3 variables; iteration 0; function evaluation 0; phase 2
+Function value 8.1589304e+01; maximum gradient component mag -2.7565e+02
+Var    Value     Gradient |Var    Value     Gradient |Var    Value     Gradient
+  1 -0.22453  9.59258e-02 |  2  0.26198  7.56491e+01 |  3 -0.03301 -2.75650e+02
+
+ - final statistics:
+3 variables; iteration 13; function evaluation 17
+Function value 7.6472e+01; maximum gradient component mag 2.0573e-05
+Exit code = 1;  converg criter 1.0000e-04
+Var    Value     Gradient |Var    Value     Gradient |Var    Value     Gradient
+  1 -0.21974 -4.40811e-07 |  2  0.36416 -7.08100e-06 |  3  0.02824  2.05734e-05
+Estimating row 1 out of 3 for hessian
+Estimating row 2 out of 3 for hessian
+Estimating row 3 out of 3 for hessian
+size of file gradfil1.tmp = 904080000
+size of file gradfil2.tmp = 0
+size of file varssave.tmp = 0
+size of file cmpdiff.tmp = 800000032
