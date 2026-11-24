@@ -574,11 +574,12 @@ bds_clean <- pacfintools::cleanPacFIN(
   # very few samples by year before this
   dplyr::filter(year >= 1983) |>
   dplyr::mutate(
-    gear = dplyr::if_else(
-      geargroup %in% c("TWL", "TWS", "MID"),
-      "TWL",
-      "FG"
-    ),
+    #gear = dplyr::if_else(
+    #  geargroup %in% c("TWL", "TWS", "MID"),
+    #  "TWL",
+    #  "FG"
+    #),
+    fleet = "all",
     stratification = AGENCY_CODE
   )
 # 5515 records: CA 1220, OR 2382, WA 1913
@@ -678,6 +679,7 @@ bds_clean <- pacfintools::cleanPacFIN(
       "TWL",
       "FG"
     ),
+    fleet = "all",
     stratification = AGENCY_CODE
   )
 # 9034 records: CA 98, OR 3332, WA 5604
@@ -689,6 +691,7 @@ ggplot2::ggplot(bds_clean, ggplot2::aes(x = lengthcm, fill = SEX_CODE)) +
 
 species_name <- "silvergray rockfish"
 bins <- length_bins_all_species |> dplyr::filter(species == species_name)
+length_bins <- seq(bins$low, bins$high, bins$bin)
 
 formatted_catch <- pacfintools::formatCatch(
   catch = landings |>
@@ -699,7 +702,8 @@ formatted_catch <- pacfintools::formatCatch(
 
 comps <- get_expanded_length_comps_standard(
   data = bds_clean |>
-    dplyr::mutate(stratification = AGENCY_CODE),
+    dplyr::mutate(stratification = AGENCY_CODE) |>
+    dplyr::filter(!(state == "CA" & year == 1999)),
   catch = formatted_catch,
   weight_lengt = weight_length_estimates |>
     dplyr::filter(species == species_name),
@@ -718,7 +722,8 @@ length_trips_samples_yellowmouth <- comps$length_trips_samples |>
 
 comps <- get_expanded_length_comps_standard(
   data = bds_clean |>
-    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U"),
+    dplyr::mutate(stratification = AGENCY_CODE, SEX_CODE = "U") |>
+    dplyr::filter(!(state == "CA" & year == 1999)),
   catch = formatted_catch,
   weight_lengt = weight_length_estimates |>
     dplyr::filter(species == species_name),
@@ -733,7 +738,8 @@ retained_lengths_unsexed <- comps$formatted_length_comps |>
 
 retained_lengths_by_sex_wide <- get_expanded_length_comps_by_sex(
   data = bds_clean |>
-    dplyr::mutate(stratification = AGENCY_CODE),
+    dplyr::mutate(stratification = AGENCY_CODE) |>
+    dplyr::filter(!(state == "CA" & year == 1999)),
   catch = formatted_catch,
   weight_length = weight_length_estimates |>
     dplyr::filter(species == species_name),
