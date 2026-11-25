@@ -1,12 +1,60 @@
 # Introduction {#sec-intro}
 
-Testing adding in an introduction for `r params$species`. There is currently no read of parameters for child documents.
+There are 11 stocks that remain in the Groundfish Fishery Management Council that do not have benchmark stock assessments and who catch limits were established in 2011 using catch-only methods [@dickEstimatesSustainableYield2010]. These are still considered Category 3 stocks, but this analysis provides an updated estimate of catch limits that use both catch and length compositions time series [@RuddCatchLengthModels2021]. This approach allows data (length compositions) to inform stock status and is an improvement from catch-only methods that use stock status as and input. This work approach is able to provide stock assessment output similar to what standard benchmark assessments provide, but is only used to inform catch limits and general stock status. If stock status is below limit reference points, this approach could also provide a trigger to move toward an assessment that uses additional data (i.e, Category 2 or 1 stock designations).
 
-<!-- The intent is to keep this section to 2-3 pages and provide a high-level summary of the assessment findings. The intention is to provide enough information in this section so the audience does not need to reference previous documents. Please include the species scientific name at the first mention of its common name. -->
 
-## Stock ID {#sec-stock-id}
+## Stock Description, Ecology, and Fishery Descriptions {#sec-stock-stuff}
 
-<!-- Provide a detailed description of the stock, if appropriate, as well as quantitative studies or data behind the decision-making process. -->
+### Bank Rockfish (*Sebastes rufus*)
+Bank Rockfish is a medium-sized rockfish that ranges from California to British Columbia, Canada, with a core range from northern California to Southern Orgeon [@Love2002]. They reside in mainly deeper shelf and shallow slope depths and on a variety of bottom features such as high relief reefs, rock and boudlers, and cobble and mud, but often affiliated with hard structures [@Love2002]. They can be found both apart from other Bank Rockfish but also in aggregation just above the sea floor [@Love2002]. 
+
+The species name is Latin for "red", and Bank Rockfish has often been refered to as "red widow" when landed in fisheries. Bank Rockfish are caught in trawl and fixed gear commerical fisheries. The peak catches were experienced in the 1980s. Since 2000, commericial catches have been very low. Recreational catches are... 
+
+### Redstripe Rockfish (*Sebastes proriger*)
+Redstripe Rockfish is a medium-sized rockfish and has been recorded from Mexico to the Aluetian Islands, with a core range from central Oregon to southeast Alaska [@Love2002]. They inhabit mostly deeper shelf shallower slope depths and are found around high-reflief structures in solo and in small or larger groups. Schooling behavior is just off the bottom or above structures [@Love2002]. 
+
+The species name "proriger" in Latin means "prow-bearing" and refers to the prominant sympheseal knob and protruding lower jaw, similar to Pacific Ocean Perch (*S. alutus*). Commercial catches of Restripe Rockfish has general been low, but has increased substantially over the last 10 years (and since the last time catch limits were calculated). 
+
+### Rosethorn Rockfish (*Sebastes helvomaculatus*)
+Rosethorn Rockfish are small- to medium-sized ranging from Mexico to Alaska, with a core distribution from northern California to southeast Alaska [@Love2002]. They are found in shelf to shallow slope depths and affiliated with boulders and hard structures on muddy bottoms. They rarely stray far from the bottom and are usually found hiding near structures, and do not seem to school [@Love2002].
+
+Their distinctive spots (the species name in Latin means "tawny-spotted") make identification easier. They are not a target for any fishery, but are found in trawl and recreational fishery catch in small numbers. Some of the largest catches occured in the 1990s, but has generally dropped since 2000.  
+
+### Shortraker Rockfish (*Sebastes borealis*)
+Shortraker Rockfish is a very large and very long-lived rockfish, with its Latin name, meaning "northern", indicating that its range is largely in the northern latitudes. It has been identified from central California to the Russia, but is most common from British Colubia to Kamchatka [@Love2002]. Thus the portion of the population being considered here is in the far southern portion of its range. Shortraker Rockfish are deeper-dwelling as well, found mostly in slope to deep slope depths and usually in soft substratum with boulders and stones.
+
+Shortraker are taken in trawl and long-line fisheries where they can be a target and desired stock in some parts of its range, but off the U.S. west coast are typically incidentially caught.
+
+### Silvergary Rockfish (*Sebastes brevispinis*)
+Silvergray Rockfish is a larger rockfish with a reported broad range from Mexico to the Gulf of Alaska, but with a core range of Oregon to Alaska [@Love2002]. They inhabitat shelf to shallow slope depths, and aggregate in schools with other rockfishes over rocky bottoms [@Love2002]. They have a similar look as Bocaccio (*S. pauscispinus*) as well as similar wormy internal disposition. The Latin name means "short-spinned" whereas the Latin name for Bocaccio means "few spines". 
+
+Silvergray Rockfish are often taken in midwater trawls and hook-and-line fisheries. They are not currently a target in U.S. west coast fisheries, and their wormy meat makes them less desireable, but they had substantial removals from the 1940s through the 1990s. Since 2000 the catches are significantly decreased, though have shown some growth in the last 10 years.
+
+### Starry Rockfish (*Sebastes constellatus*)
+Starry Rockfish (constellatus meaning "starry") is a small- to medium- sized rockfish found from northern California down to southern Baja Calfornia [@Love2002], but more common south of central California. They are a nearshore to shallow shelf species and usually found among rocks, boulders, caves and other hard structures they can find refuge in [@Love2002]. They generally are solitary and stick near the bottom and close to structure.
+
+Starry rockfish size and colorful look do make them attractive to premium fish markets as well as recreational fisheries in California despite being smaller. While historical removals demonstarte starry as a commonly caught species, catches have greatly decreased since 2000.
+
+### Stripetail Rockfish (*Sebastes saxicola*)
+Stripetail Rockfish is a small- to medium-sized rockfish known for its relatively large-sized eyes. They found from Mexico to southern Alaska [@Love2002]. There core distribution is southern California to British Columbia and within shelf depths. Despite their Latin name, which means "rock-dweller", Stripetail Rockfish are mostly found in muddy or sandy bottoms with stones or shells [@Love2002]. 
+
+Stripetail are mostly taken in commercial trawl fisheries and often discarded because of their smaller sizes. Total removals have increased over the past 10 years.
+
+### Yellowmouth Rockfish (*Sebastes reedi*)
+Theh Yellowmouth Rockfish is a larger rockfish that ranges from northern California into the Gulf of Alaska, but are most commonly occurring form southern Oregon to southeast Alaska. They are found in deeper shelf and shallow slope depths among high relief rocks, where they are often found schooling just above the hard structures. 
+
+Yellowmouth are caught in midwater and bottom trawls, commonly with Pacific Ocean Perch (*S. alutus*). The Latin name refers to a former Chairman of the Fisheries Research Board of Canada [@Love2002], and is indicative that Yellowmouth Rockfish are a notable fishery off of British Columbia.
+
+### Flathead Sole (*Hippoglossoides elassodon*)
+Flathead Sole range from central California to Russia, with a core west distribution that starts in Oregon and goes northward [Love2011]. They are generally found in mid-shelf to shallow slope depths and live on sandy to muddy bottoms. 
+
+Flathead Sole do not seem to be major targets in trawl fisheries, with removals not showing any indetifiable trends. Discards can be as much or more as the landed amounts. 
+
+### Pacific Sanddab (*Citharichthys sordidus*)
+
+
+### Pacific Cod (*Gadus macrocephalus*)
+Pacific Cod have one of the largest ranges of the fishes being considered in this analysis. It also have a large history of being assessed in Alaska ans elsewhere. While its range is recorded from California to the Yellow Sea, its core population is found north of Washington State. This analysis thus deals with a very small part of both range and overall Pacific Cod population. That said, its removals are some of the largest of all of the fishes in this analysis as well. So while it is not a major west coast fishery target nor does this represent a major portion of the overall species range, Pacific cod are definitely a presence in west coast groundfish fisheries, not often discarded, are in the groundfish FMP, and thus need an updated catch limit estimation.
 
 
 ## Management History {#sec-management-history}
@@ -14,15 +62,3 @@ Testing adding in an introduction for `r params$species`. There is currently no 
 <!---
 Briefly describe the management history of the stock and status. Please only touch on historical policies that would have impacted modeling decisions or would be critical knowledge about the species that might affect its population dynamics.
 --->
-
-## Fishery Descriptions {#sec-fishery-descriptions}
-
-<!---
-Short summary of fleet composition (i.e., boat types), gear types, species targeted, and fishing grounds (one paragraph).
---->
-
-## Ecosystem Considerations {#sec-ecosystem-considerations}
-
-<!--- If this section is not relevant, please leave the following statement in the report --->
-Ecosystem considerations and/or climate indicators were not included in this assessment.
-
